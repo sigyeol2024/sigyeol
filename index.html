@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시결 | POETRY WEBZINE</title>
+    
+    <meta name="description" content="시 전문 웹진 시결(SIGYEOL). 신작시, 주목한 시, 신인상, 공지사항.">
+    <meta name="keywords" content="시, 시결, 웹진, POETRY, SIGYEOL, 문학, 시인">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="웹진 시결">
+    <meta property="og:title" content="시결 | POETRY WEBZINE">
+    <meta property="og:description" content="정갈한 결을 담아내는 시 전문 웹진 시결입니다.">
+    <meta property="og:url" content="https://sigyeol.com">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-main: #f7f6f3;
+            --bg-card: #ffffff;
+            --bg-elevated: #fafaf8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5c5c5c;
+            --text-muted: #8a8a8a;
+            --border-color: #e8e6e1;
+            --border-card: #ebe9e4;
+            --sigyeol-green: #2f6b4f;
+            --sigyeol-green-soft: rgba(47, 107, 79, 0.08);
+            --shadow-soft: 0 4px 24px rgba(26, 26, 26, 0.04);
+            --shadow-hover: 0 12px 40px rgba(26, 26, 26, 0.08);
+            --radius: 2px;
+            --transition: 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        body.dark-mode {
+            --bg-main: #141414;
+            --bg-card: #1c1c1c;
+            --bg-elevated: #222222;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --text-muted: #6e6e6e;
+            --border-color: #2c2c2c;
+            --border-card: #2e2e2e;
+            --sigyeol-green: #4aad7a;
+            --sigyeol-green-soft: rgba(74, 173, 122, 0.12);
+            --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Serif KR', 'Batang', serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.85;
+            word-break: keep-all;
+            transition: background-color var(--transition), color var(--transition);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ========== Header ========== */
+        header {
+            width: 100%;
+            padding: 48px 24px 36px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+            position: relative;
+            transition: background-color var(--transition), border-color var(--transition);
+        }
+
+        .site-title-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            color: var(--sigyeol-green);
+            line-height: 0.92;
+            margin-bottom: 6px;
+            transition: opacity var(--transition);
+        }
+        .site-title-wrapper:hover { opacity: 0.85; }
+
+        .title-char-si {
+            font-size: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            margin-right: 12px;
+        }
+        .title-char-gyeol {
+            font-size: 2.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            margin-left: 8px;
+            margin-top: -1px;
+        }
+
+        .site-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            margin-top: 12px;
+            font-weight: 400;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: color var(--transition), background-color var(--transition), transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-btn:hover {
+            color: var(--text-primary);
+            background: var(--sigyeol-green-soft);
+            transform: scale(1.05);
+        }
+        .theme-toggle-btn .fa-sun,
+        body.dark-mode .theme-toggle-btn .fa-moon { display: none; }
+        body.dark-mode .theme-toggle-btn .fa-sun { display: block; }
+
+        /* Navigation */
+        nav { margin-top: 28px; }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        nav a {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            position: relative;
+            padding: 4px 0;
+            transition: color var(--transition);
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background: var(--sigyeol-green);
+            transition: width 0.3s ease;
+        }
+        nav a:hover,
+        nav a.active {
+            color: var(--text-primary);
+        }
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+
+        #nav-item-archive { display: none; }
+
+        /* ========== Main ========== */
+        main {
+            max-width: 1040px;
+            margin: 48px auto 80px;
+            padding: 0 24px;
+            min-height: 520px;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 36px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .section-header-title {
+            font-size: 1.35rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            color: var(--text-primary);
+        }
+
+        /* Search */
+        .search-container {
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 44px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-container.active { display: flex; }
+
+        .search-select,
+        .search-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.84rem;
+            outline: none;
+            border-radius: var(--radius);
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .search-select:focus,
+        .search-input:focus {
+            border-color: var(--sigyeol-green);
+            box-shadow: 0 0 0 3px var(--sigyeol-green-soft);
+        }
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 100%;
+            padding-right: 40px;
+        }
+        .search-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+        .search-btn:hover { color: var(--sigyeol-green); }
+
+        /* Admin Bar */
+        .admin-bar {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a1a;
+            color: #f0f0f0;
+            padding: 14px 22px;
+            font-size: 0.82rem;
+            margin-bottom: 36px;
+            border-radius: var(--radius);
+            letter-spacing: 0.02em;
+        }
+        .admin-bar.active { display: flex; }
+        .admin-btn {
+            background: #fff;
+            color: #1a1a1a;
+            border: none;
+            padding: 7px 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
+            border-radius: var(--radius);
+            transition: opacity 0.2s;
+        }
+        .admin-btn:hover { opacity: 0.88; }
+
+        /* ========== Grid & Cards ========== */
+        .poetry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 28px;
+        }
+
+        .poetry-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            padding: 36px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+        }
+        .poetry-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: var(--sigyeol-green);
+            transition: height 0.35s ease;
+        }
+        .poetry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: transparent;
+        }
+        .poetry-card:hover::before {
+            height: 100%;
+        }
+
+        .poem-category {
+            font-size: 0.7rem;
+            color: var(--sigyeol-green);
+            margin-bottom: 14px;
+            letter-spacing: 0.12em;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .poem-title {
+            font-size: 1.18rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.55;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            color: var(--text-primary);
+        }
+        .poem-author {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            line-height: 1.45;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+        .read-more {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            display: inline-block;
+            letter-spacing: 0.12em;
+            transition: color var(--transition);
+        }
+        .poetry-card:hover .read-more {
+            color: var(--sigyeol-green);
+        }
+
+        .card-admin-actions {
+            display: none;
+            margin-top: 14px;
+            gap: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            flex-wrap: wrap;
+        }
+        .card-admin-actions.active { display: flex; }
+        .action-btn {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: color 0.2s;
+        }
+        .action-btn:hover { color: var(--text-primary); }
+        .action-btn.featured {
+            color: var(--sigyeol-green);
+            font-weight: 600;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 56px;
+        }
+        .page-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            min-width: 38px;
+            height: 38px;
+            padding: 0 8px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.84rem;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+        .page-btn:hover:not(:disabled):not(.active) {
+            border-color: var(--sigyeol-green);
+            color: var(--sigyeol-green);
+        }
+        .page-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-main);
+            border-color: var(--text-primary);
+            font-weight: 600;
+        }
+        .page-btn:disabled {
+            opacity: 0.28;
+            cursor: default;
+        }
+
+        .no-result {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 64px 0;
+            width: 100%;
+            grid-column: 1 / -1;
+            font-size: 0.92rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* ========== Poem Detail ========== */
+        .poem-detail-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            padding: 64px 48px 56px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-soft);
+        }
+        .poem-detail-category {
+            font-size: 0.72rem;
+            color: var(--sigyeol-green);
+            letter-spacing: 0.2em;
+            text-align: center;
+            margin-bottom: 18px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .poem-detail-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            word-break: keep-all;
+            line-height: 1.45;
+            letter-spacing: -0.01em;
+        }
+        .poem-detail-author {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            word-break: keep-all;
+        }
+        .poem-detail-content {
+            font-size: 1.02rem;
+            line-height: 2.35;
+            white-space: pre-line;
+            margin-bottom: 56px;
+            padding: 0 12px;
+            text-indent: 0.8em;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+        .poem-detail-content p,
+        .poem-detail-content div {
+            text-indent: 0.8em;
+        }
+
+        .detail-action-btns {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .detail-btn {
+            display: inline-block;
+            padding: 11px 26px;
+            border: 1px solid var(--border-color);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.25s ease;
+            font-family: inherit;
+            border-radius: var(--radius);
+            letter-spacing: 0.04em;
+        }
+        .detail-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        /* ========== Modal ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.55);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.25s ease; }
+
+        .modal-box {
+            background: var(--bg-card);
+            padding: 36px 32px;
+            width: 90%;
+            max-width: 560px;
+            border: 1px solid var(--border-color);
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 4px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        .modal-box h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.04em;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+        }
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            border-radius: var(--radius);
+            outline: none;
+            transition: border-color var(--transition);
+        }
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            border-color: var(--sigyeol-green);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 8px;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        .editor-toolbar button {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 5px 11px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .editor-toolbar button:hover {
+            background: var(--sigyeol-green-soft);
+            color: var(--sigyeol-green);
+            border-color: var(--sigyeol-green);
+        }
+        .editor-content {
+            min-height: 180px;
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            font-size: 0.92rem;
+            line-height: 1.9;
+            outline: none;
+            background: var(--bg-main);
+            overflow-y: auto;
+            text-indent: 0.8em;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        /* ========== Footer ========== */
+        footer {
+            margin-top: 100px;
+            padding: 48px 24px 40px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            background: var(--bg-card);
+            transition: background-color var(--transition), border-color var(--transition);
+        }
+        .instagram-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            transition: color var(--transition), transform 0.2s;
+        }
+        .instagram-icon:hover {
+            color: var(--sigyeol-green);
+            transform: scale(1.1);
+        }
+        .instagram-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+        .copyright {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            margin-top: 16px;
+        }
+
+        /* ========== Mobile ========== */
+        @media (max-width: 768px) {
+            header { padding: 36px 16px 28px; }
+            .header-controls { top: 16px; right: 12px; gap: 2px; }
+            .header-btn { width: 36px; height: 36px; font-size: 0.95rem; }
+            .title-char-si { font-size: 2.15rem; }
+            .title-char-gyeol { font-size: 2.3rem; }
+            nav { margin-top: 22px; }
+            nav ul { gap: 18px; }
+            nav a { font-size: 0.8rem; }
+            main { margin: 32px auto 48px; padding: 0 14px; }
+            .search-container { margin-bottom: 28px; }
+            .poetry-grid {
+                gap: 16px;
+                grid-template-columns: 1fr;
+            }
+            .poetry-card { padding: 28px 22px 24px; }
+            .poem-detail-container {
+                padding: 40px 20px 36px;
+                border: none;
+                box-shadow: none;
+                background: transparent;
+            }
+            .poem-detail-title { font-size: 1.45rem; }
+            .poem-detail-content {
+                padding: 0;
+                margin-bottom: 40px;
+                font-size: 0.98rem;
+                line-height: 2.25;
+            }
+            .poem-detail-author {
+                margin-bottom: 32px;
+                padding-bottom: 22px;
+            }
+            .section-header-title { font-size: 1.2rem; letter-spacing: 0.14em; }
+            footer { margin-top: 64px; padding: 36px 16px 32px; }
+            .admin-bar {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            nav ul { gap: 12px; }
+            .title-char-si { font-size: 1.95rem; }
+            .title-char-gyeol { font-size: 2.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-controls">
+            <button class="header-btn" onclick="handleDiceClick()" title="랜덤 글 보기" aria-label="랜덤 글 보기"><i class="fas fa-dice"></i></button>
+            <button class="header-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        </div>
+
+        <div class="site-title-wrapper" onclick="handleTitleClick()">
+            <span class="title-char-si">시</span>
+            <span class="title-char-gyeol">결</span>
+        </div>
+        <div class="site-subtitle">POETRY WEBZINE</div>
+
+        <nav>
+            <ul>
+                <li><a onclick="navigateToSection('new-poems')" id="nav-new-poems">신작시</a></li>
+                <li><a onclick="navigateToSection('featured-poems')" id="nav-featured-poems">주목한 시</a></li>
+                <li><a onclick="handleRookieAwardClick()" id="nav-rookie-award">신인상</a></li>
+                <li><a onclick="navigateToSection('notice')" id="nav-notice">공지사항</a></li>
+                <li id="nav-item-archive"><a onclick="navigateToSection('archive')" id="nav-archive">아카이브</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="admin-bar" class="admin-bar">
+            <span>ADMIN MODE (작성 후 'poems.js 다운로드'를 꼭 눌러주세요)</span>
+            <div>
+                <button class="admin-btn" onclick="openWriteModal()">+ 새 글 작성</button>
+                <button class="admin-btn" onclick="downloadPoemsFile()" style="background:#2f6b4f; color:#fff; margin-left:5px;">📥 poems.js 다운로드</button>
+                <button class="admin-btn" onclick="toggleAdminMode()" style="background:#444; color:#fff; margin-left:5px;">종료</button>
+            </div>
+        </div>
+
+        <div id="search-container" class="search-container">
+            <select id="search-type" class="search-select">
+                <option value="all">전체검색</option>
+                <option value="title">제목</option>
+                <option value="author">작가명</option>
+                <option value="content">본문</option>
+            </select>
+            <div class="search-input-wrapper">
+                <input type="text" id="search-keyword" class="search-input" placeholder="검색어를 입력하세요..." onkeyup="if(event.key==='Enter') handleSearch()">
+                <button class="search-btn" onclick="handleSearch()"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <!-- Sections -->
+        <section id="section-main" class="page-section active"><div id="grid-main" class="poetry-grid"></div><div id="pagination-main" class="pagination"></div></section>
+        <section id="section-new-poems" class="page-section"><div class="section-header"><h1 class="section-header-title">신작시</h1></div><div id="grid-new-poems" class="poetry-grid"></div><div id="pagination-new-poems" class="pagination"></div></section>
+        <section id="section-featured-poems" class="page-section"><div class="section-header"><h1 class="section-header-title">주목한 시</h1></div><div id="grid-featured-poems" class="poetry-grid"></div><div id="pagination-featured-poems" class="pagination"></div></section>
+        <section id="section-rookie-award" class="page-section"><div class="section-header"><h1 class="section-header-title">신인상</h1></div><div id="grid-rookie-award" class="poetry-grid"></div><div id="pagination-rookie-award" class="pagination"></div></section>
+        <section id="section-notice" class="page-section"><div class="section-header"><h1 class="section-header-title">공지사항</h1></div><div id="grid-notice" class="poetry-grid"></div><div id="pagination-notice" class="pagination"></div></section>
+        <section id="section-archive" class="page-section"><div class="section-header"><h1 class="section-header-title">아카이브</h1></div><div id="grid-archive" class="poetry-grid"></div><div id="pagination-archive" class="pagination"></div></section>
+
+        <!-- Detail View -->
+        <section id="section-poem-detail" class="page-section">
+            <div class="poem-detail-container">
+                <div id="detail-category" class="poem-detail-category">카테고리</div>
+                <h1 id="detail-title" class="poem-detail-title">제목</h1>
+                <div id="detail-author" class="poem-detail-author">작가</div>
+                <div id="detail-content" class="poem-detail-content">본문</div>
+                
+                <div class="detail-action-btns">
+                    <button class="detail-btn" onclick="goBack()">돌아가기</button>
+                    <button id="copy-link-btn" class="detail-btn" onclick="copyCurrentLink()">링크 복사</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modal-heading">작품 작성</h2>
+            <input type="hidden" id="edit-id">
+            <div class="form-group">
+                <label for="form-category">카테고리</label>
+                <select id="form-category">
+                    <option value="신작시">신작시</option>
+                    <option value="주목한 시">주목한 시</option>
+                    <option value="신인상">신인상</option>
+                    <option value="공지사항">공지사항</option>
+                    <option value="아카이브">아카이브</option>
+                </select>
+            </div>
+            <div class="form-group"><label for="form-title">제목</label><input type="text" id="form-title"></div>
+            <div class="form-group"><label for="form-author">작가명</label><input type="text" id="form-author"></div>
+            <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="form-is-main"><label for="form-is-main" style="margin:0; cursor:pointer;">메인 페이지에 노출하기</label>
+            </div>
+            <div class="form-group">
+                <label>시 전문 (본문 서식 편집)</label>
+                <div class="editor-toolbar">
+                    <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="execCmd('strikeThrough')"><s>S</s></button>
+                    <span style="width:1px; background:var(--border-color); margin:0 4px;"></span>
+                    <button type="button" onclick="execCmd('justifyLeft')">좌 정렬</button>
+                    <button type="button" onclick="execCmd('justifyCenter')">중앙 정렬</button>
+                    <button type="button" onclick="execCmd('justifyRight')">우 정렬</button>
+                </div>
+                <div id="form-content-editor" class="editor-content" contenteditable="true"></div>
+            </div>
+            <div class="form-actions">
+                <button class="admin-btn" onclick="closeModal()" style="background:#eee; color:#333;">취소</button>
+                <button class="admin-btn" onclick="saveItem()" style="background:#1a1a1a; color:#fff;">저장하기</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.instagram.com/sigyeol/" target="_blank" rel="noopener noreferrer" class="instagram-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <div class="copyright">Copyright 2026 ⓒ웹진《시결》. Rights reserved</div>
+    </footer>
+
+    <script src="poems.js"></script>
+    <script>
+        let currentPoems = typeof poems !== 'undefined' ? [...poems] : [];
+        let isAdmin = false, currentSection = 'main', previousSection = 'main';
+        
+        let titleClickCount = 0;
+        let isAdminReady = false; 
+        let adminTimer = null;
+
+        let rookieClickCount = 0;
+        let isArchiveReady = false;
+        let archiveTimer = null;
+
+        const ITEMS_PER_PAGE = 12, PAGES_PER_BLOCK = 10;
+        let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1, '아카이브': 1 };
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+        function handleRookieAwardClick() {
+            if (++rookieClickCount >= 3) {
+                rookieClickCount = 0;
+                isArchiveReady = true;
+                clearTimeout(archiveTimer);
+                archiveTimer = setTimeout(() => { isArchiveReady = false; }, 8000);
+            } else {
+                navigateToSection('rookie-award');
+            }
+        }
+
+        function handleDiceClick() {
+            if (isArchiveReady) {
+                isArchiveReady = false;
+                clearTimeout(archiveTimer);
+                navigateToSection('archive');
+            } else if (isAdminReady) {
+                isAdminReady = false;
+                clearTimeout(adminTimer);
+                
+                if (isAdmin) {
+                    toggleAdminMode();
+                } else {
+                    const pw = prompt("관리자 비밀번호를 입력하세요:");
+                    if (pw === "wlfakwotlsghk5") toggleAdminMode();
+                    else if (pw !== null) alert("비밀번호가 올바르지 않습니다.");
+                }
+            } else {
+                openRandomPoem();
+            }
+        }
+
+        function openRandomPoem() {
+            const poemList = currentPoems.filter(p => p.category !== '공지사항' && p.category !== '아카이브');
+            if (poemList.length === 0) return alert('읽을 수 있는 작품이 아직 없습니다.');
+            const randomIndex = Math.floor(Math.random() * poemList.length);
+            navigateToPoemDetail(poemList[randomIndex].id);
+        }
+
+        function copyCurrentLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('게시글 주소가 복사되었습니다.');
+            }).catch(() => {
+                alert('주소 복사에 실패했습니다. 브라우저 주소창을 직접 복사해 주세요.');
+            });
+        }
+
+        const getSortedPoems = arr => [...arr].sort((a, b) => Number(b.id) - Number(a.id));
+        const handleSearch = () => { pageStates[currentSection] = 1; renderData(); };
+
+        function renderData() {
+            const type = document.getElementById('search-type').value;
+            const kw = document.getElementById('search-keyword').value.trim().toLowerCase();
+            let filtered = getSortedPoems(currentPoems);
+
+            if (kw) {
+                filtered = filtered.filter(p => {
+                    const t = (p.title || "").toLowerCase(), a = (p.author || "").toLowerCase(), c = (p.content || "").toLowerCase();
+                    return type === 'title' ? t.includes(kw) : type === 'author' ? a.includes(kw) : type === 'content' ? c.includes(kw) : (t.includes(kw) || a.includes(kw) || c.includes(kw));
+                });
+            }
+
+            const categories = ['main', '신작시', '주목한 시', '신인상', '공지사항', '아카이브'];
+            categories.forEach(cat => {
+                const gridId = cat === 'main' ? 'grid-main' : cat === '신작시' ? 'grid-new-poems' : cat === '주목한 시' ? 'grid-featured-poems' : cat === '신인상' ? 'grid-rookie-award' : cat === '공지사항' ? 'grid-notice' : 'grid-archive';
+                const pageId = cat === 'main' ? 'pagination-main' : cat === '신작시' ? 'pagination-new-poems' : cat === '주목한 시' ? 'pagination-featured-poems' : cat === '신인상' ? 'pagination-rookie-award' : cat === '공지사항' ? 'pagination-notice' : 'pagination-archive';
+                
+                const grid = document.getElementById(gridId);
+                const page = document.getElementById(pageId);
+                if (!grid) return;
+                grid.innerHTML = ''; page.innerHTML = '';
+
+                const items = cat === 'main' ? filtered.filter(p => p.isMain) : filtered.filter(p => p.category === cat);
+                if (items.length === 0) { grid.innerHTML = `<div class="no-result">등록된 작품이 없거나 검색 결과가 없습니다.</div>`; return; }
+
+                const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+                if (pageStates[cat] > totalPages) pageStates[cat] = totalPages;
+                const curPage = pageStates[cat] || 1;
+                const pagedItems = items.slice((curPage - 1) * ITEMS_PER_PAGE, curPage * ITEMS_PER_PAGE);
+
+                pagedItems.forEach(item => {
+                    const card = document.createElement('article');
+                    card.className = 'poetry-card';
+                    card.innerHTML = `
+                        <div onclick="navigateToPoemDetail('${item.id}')">
+                            <div class="poem-category">${item.category}</div>
+                            <h2 class="poem-title">${item.title}</h2>
+                            <p class="poem-author">${item.author}</p>
+                            <span class="read-more">READ MORE →</span>
+                        </div>
+                        <div class="card-admin-actions ${isAdmin ? 'active' : ''}">
+                            <button class="action-btn ${item.isMain ? 'featured' : ''}" onclick="toggleMain(${item.id})">${item.isMain ? '★ 메인 노출중' : '☆ 메인 설정'}</button>
+                            <button class="action-btn" onclick="openEditModal(${item.id})">수정</button>
+                            <button class="action-btn" onclick="deleteItem(${item.id})">삭제</button>
+                        </div>`;
+                    grid.appendChild(card);
+                });
+
+                if (totalPages > 1 && page) {
+                    const start = (Math.ceil(curPage / PAGES_PER_BLOCK) - 1) * PAGES_PER_BLOCK + 1;
+                    const end = Math.min(start + PAGES_PER_BLOCK - 1, totalPages);
+
+                    const createBtn = (html, disabled, onClick) => {
+                        const b = document.createElement('button');
+                        b.className = 'page-btn'; b.innerHTML = html; b.disabled = disabled;
+                        b.onclick = onClick; return b;
+                    };
+
+                    page.appendChild(createBtn('<i class="fas fa-chevron-left"></i>', curPage === 1, () => { pageStates[cat] = curPage - 1; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); }));
+                    for (let i = start; i <= end; i++) {
+                        const btn = createBtn(i, false, () => { pageStates[cat] = i; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); });
+                        if (i === curPage) btn.classList.add('active');
+                        page.appendChild(btn);
+                    }
+                    page.appendChild(createBtn('<i class="fas fa-chevron-right"></i>', curPage === totalPages, () => { pageStates[cat] = curPage + 1; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); }));
+                }
+            });
+        }
+
+        function navigateToSection(secId, pushHistory = true) {
+            if (pushHistory) {
+                history.pushState({ section: secId }, '', window.location.pathname);
+            }
+            showSection(secId);
+        }
+
+        function navigateToPoemDetail(id, pushHistory = true) {
+            if (pushHistory) {
+                history.pushState({ poemId: id }, '', '?id=' + id);
+            }
+            showPoemDetail(id);
+        }
+
+        window.addEventListener('popstate', function(e) {
+            const params = new URLSearchParams(window.location.search);
+            const poemId = params.get('id');
+
+            if (poemId) {
+                showPoemDetail(poemId);
+            } else if (e.state && e.state.section) {
+                showSection(e.state.section);
+            } else {
+                showSection('main');
+            }
+        });
+
+        function handleTitleClick() {
+            if (++titleClickCount >= 3) {
+                titleClickCount = 0;
+                isAdminReady = true;
+                clearTimeout(adminTimer);
+                adminTimer = setTimeout(() => { isAdminReady = false; }, 8000);
+            } else {
+                setTimeout(() => { if (titleClickCount === 1) { titleClickCount = 0; navigateToSection('main'); } }, 300);
+            }
+        }
+
+        /* 관리자 모드 토글 시 상단 '아카이브' 메뉴 노출 여부 스위칭 */
+        function toggleAdminMode() { 
+            isAdmin = !isAdmin; 
+            document.getElementById('admin-bar').classList.toggle('active', isAdmin); 
+            document.getElementById('nav-item-archive').style.display = isAdmin ? 'inline-block' : 'none';
+            renderData(); 
+        }
+
+        function toggleMain(id) { const item = currentPoems.find(p => p.id === id); if (item) { item.isMain = !item.isMain; renderData(); } }
+        function execCmd(cmd) { document.execCommand(cmd, false, null); }
+
+        function openWriteModal() {
+            document.getElementById('edit-id').value = '';
+            document.getElementById('modal-heading').innerText = '새 글 작성';
+            document.getElementById('form-title').value = ''; document.getElementById('form-author').value = '';
+            document.getElementById('form-is-main').checked = true;
+            document.getElementById('form-content-editor').innerHTML = '<div style="text-align: left;"><br></div>';
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            const item = currentPoems.find(p => p.id === id); if (!item) return;
+            document.getElementById('edit-id').value = item.id;
+            document.getElementById('modal-heading').innerText = '글 수정하기';
+            document.getElementById('form-category').value = item.category;
+            document.getElementById('form-title').value = item.title;
+            document.getElementById('form-author').value = item.author;
+            document.getElementById('form-is-main').checked = !!item.isMain;
+            document.getElementById('form-content-editor').innerHTML = item.content;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+
+        function saveItem() {
+            const id = document.getElementById('edit-id').value, cat = document.getElementById('form-category').value;
+            const title = document.getElementById('form-title').value, author = document.getElementById('form-author').value;
+            const isMain = document.getElementById('form-is-main').checked, content = document.getElementById('form-content-editor').innerHTML;
+            if (!title || !content.trim()) return alert('제목과 내용을 입력해 주세요.');
+
+            if (id) {
+                const idx = currentPoems.findIndex(p => p.id == id);
+                currentPoems[idx] = { id: Number(id), category: cat, title, author, isMain, content };
+            } else {
+                currentPoems.push({ id: Date.now(), category: cat, title, author, isMain, content });
+            }
+            closeModal(); renderData();
+        }
+
+        function deleteItem(id) { if (confirm('정말 삭제하시겠습니까?')) { currentPoems = currentPoems.filter(p => p.id !== id); renderData(); } }
+
+        function downloadPoemsFile() {
+            const data = "const poems = " + JSON.stringify(getSortedPoems(currentPoems), null, 2) + ";";
+            const blob = new Blob([data], { type: "text/javascript" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a"); a.href = url; a.download = "poems.js";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        }
+
+        function showSection(secId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+            const target = document.getElementById('section-' + secId), nav = document.getElementById('nav-' + secId);
+            if (target) target.classList.add('active');
+            if (nav) nav.classList.add('active');
+
+            document.getElementById('search-container').classList.toggle('active', secId !== 'main' && secId !== 'poem-detail');
+            if (secId !== 'poem-detail') { currentSection = secId; previousSection = secId; }
+            window.scrollTo({ top: 0, behavior: 'smooth' }); renderData();
+        }
+
+        function showPoemDetail(id) {
+            const item = currentPoems.find(p => p.id == id); if (!item) return;
+            document.getElementById('detail-category').innerText = item.category;
+            document.getElementById('detail-title').innerText = item.title;
+            document.getElementById('detail-author').innerText = item.author;
+            document.getElementById('detail-content').innerHTML = item.content;
+
+            const copyBtn = document.getElementById('copy-link-btn');
+            if (copyBtn) {
+                copyBtn.style.display = (item.category === '아카이브') ? 'none' : 'inline-block';
+            }
+
+            showSection('poem-detail');
+        }
+
+        function goBack() { 
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                navigateToSection(previousSection);
+            }
+        }
+
+        function initApp() {
+            const params = new URLSearchParams(window.location.search);
+            const poemId = params.get('id');
+            if (poemId) {
+                showPoemDetail(poemId);
+            } else {
+                renderData();
+            }
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
