@@ -56,4 +56,4 @@ collections:
       - label: 본문
         name: content
         widget: poem-html
-        hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장되며 사이트의 시 본문과 같은 형태입니다."
+        hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬 (+ 밝은/어두운 배경 미리보기). Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. 편집 화면은 시결 본문 보기와 비슷한 서체·여백이며 HTML로 저장됩니다."

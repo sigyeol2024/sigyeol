@@ -1,0 +1,225 @@
+/* Sigyeol Decap poem-html widget — matches live .poem-detail-* */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap');
+
+.sigyeol-poem-widget {
+  font-family: 'Noto Serif KR', 'Batang', serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sigyeol-poem-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid #dfdfe3;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background: #f5f5f7;
+}
+
+.sigyeol-poem-toolbar button {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 0 2px 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.sigyeol-poem-toolbar button:hover {
+  background: #eee;
+}
+
+.sigyeol-poem-toolbar-sep {
+  width: 1px;
+  height: 18px;
+  background: #ccc;
+  margin: 0 6px;
+}
+
+.sigyeol-poem-toolbar-spacer {
+  flex: 1;
+  min-width: 8px;
+}
+
+.sigyeol-poem-theme-btn {
+  font-size: 12px !important;
+  letter-spacing: 0.02em;
+  color: #5c5c5c !important;
+}
+
+/* Poem stage — like .poem-detail-container */
+.sigyeol-poem-stage {
+  --sg-bg: #ffffff;
+  --sg-bg-outer: #f7f6f3;
+  --sg-text: #1a1a1a;
+  --sg-text-secondary: #5c5c5c;
+  --sg-border: #e8e6e1;
+  --sg-border-card: #ebe9e4;
+  --sg-green: #2f6b4f;
+  --sg-shadow: 0 4px 24px rgba(26, 26, 26, 0.04);
+
+  background: var(--sg-bg-outer);
+  border: 1px solid #dfdfe3;
+  border-radius: 0 0 4px 4px;
+  padding: 28px 16px 32px;
+  outline: none;
+}
+
+.sigyeol-poem-stage.is-dark {
+  --sg-bg: #1c1c1c;
+  --sg-bg-outer: #141414;
+  --sg-text: #e8e8e8;
+  --sg-text-secondary: #a0a0a0;
+  --sg-border: #2c2c2c;
+  --sg-border-card: #2e2e2e;
+  --sg-green: #4aad7a;
+  --sg-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  .sigyeol-poem-stage:not(.is-light) {
+    --sg-bg: #1c1c1c;
+    --sg-bg-outer: #141414;
+    --sg-text: #e8e8e8;
+    --sg-text-secondary: #a0a0a0;
+    --sg-border: #2c2c2c;
+    --sg-border-card: #2e2e2e;
+    --sg-green: #4aad7a;
+    --sg-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.sigyeol-poem-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--sg-bg);
+  border: 1px solid var(--sg-border-card);
+  border-radius: 2px;
+  box-shadow: var(--sg-shadow);
+  padding: 48px 40px 40px;
+  color: var(--sg-text);
+}
+
+.sigyeol-poem-meta {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.sigyeol-poem-meta.is-empty {
+  display: none;
+}
+
+.sigyeol-poem-meta-title {
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  margin: 0 0 10px;
+  color: var(--sg-text);
+}
+
+.sigyeol-poem-meta-author {
+  font-size: 0.9rem;
+  color: var(--sg-text-secondary);
+  word-break: keep-all;
+  margin: 0 0 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--sg-border);
+}
+
+/* contenteditable body — like .poem-detail-content */
+.sigyeol-poem-body {
+  min-height: 280px;
+  font-family: 'Noto Serif KR', 'Batang', serif;
+  font-size: 1.02rem;
+  font-weight: 400;
+  line-height: 2.35;
+  color: var(--sg-text);
+  white-space: pre-wrap;
+  word-break: keep-all;
+  padding: 0 12px;
+  margin: 0;
+  outline: none;
+  overflow-y: auto;
+  max-height: min(70vh, 720px);
+  caret-color: var(--sg-green);
+}
+
+.sigyeol-poem-body:focus {
+  outline: none;
+}
+
+.sigyeol-poem-body > div,
+.sigyeol-poem-body > p {
+  text-indent: 0.8em;
+  margin: 0;
+  min-height: 1em;
+}
+
+/* Nested wrapper from stored HTML: outer align div */
+.sigyeol-poem-body > div > div,
+.sigyeol-poem-body > div > p {
+  text-indent: 0.8em;
+  margin: 0;
+  min-height: 1em;
+}
+
+.sigyeol-poem-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .sigyeol-poem-card {
+    padding: 32px 18px 28px;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .sigyeol-poem-stage {
+    padding: 16px 8px 20px;
+  }
+
+  .sigyeol-poem-body {
+    padding: 0;
+    font-size: 0.98rem;
+    line-height: 2.25;
+  }
+
+  .sigyeol-poem-meta-title {
+    font-size: 1.35rem;
+  }
+
+  .sigyeol-poem-meta-author {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+  }
+}
+
+/* Override Decap classNameWrapper chrome on the contenteditable */
+.sigyeol-poem-body[class*="css-"],
+div.sigyeol-poem-body {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
