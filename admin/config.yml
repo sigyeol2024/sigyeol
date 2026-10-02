@@ -1,0 +1,59 @@
+# Decap CMS — 시결 (sigyeol.com)
+# 로그인: Netlify Identity + Git Gateway (Netlify 대시보드에서 활성화 필요)
+# 대안: 아래 backend를 github로 바꿀 수 있음 (repo: sigyeol2024/sigyeol, branch: main)
+
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: false
+
+media_folder: static/media
+public_folder: /static/media
+
+# 바로 발행 (editorial workflow 끔)
+
+collections:
+  - name: poems
+    label: 시·공지
+    label_singular: 글
+    folder: content/poems
+    create: true
+    delete: true
+    slug: "{{id}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{title}} — {{author}} ({{category}})"
+    sortable_fields: ["id", "title", "author", "category"]
+    fields:
+      - label: ID
+        name: id
+        widget: number
+        value_type: int
+        hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. 클수록 목록 위쪽에 표시됩니다."
+      - label: 카테고리
+        name: category
+        widget: select
+        options:
+          - 신작시
+          - 주목한 시
+          - 신인상
+          - 공지사항
+          - 아카이브
+        default: 신작시
+      - label: 제목
+        name: title
+        widget: string
+      - label: 작가명
+        name: author
+        widget: string
+        default: ""
+      - label: 메인 페이지 노출
+        name: isMain
+        widget: boolean
+        default: false
+      - label: 본문 (HTML)
+        name: content
+        widget: text
+        hint: "기존 서식 유지를 위해 HTML을 그대로 둡니다. 간단한 글은 <div>줄</div> 형태로 작성해도 됩니다."
