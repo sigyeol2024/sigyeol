@@ -24,14 +24,21 @@ collections:
     extension: json
     format: json
     identifier_field: title
-    summary: "{{title}} — {{author}} ({{category}})"
-    sortable_fields: ["id", "title", "author", "category"]
+    summary: "{{order}} · {{title}} — {{author}} ({{category}})"
+    # 목록 화면에서 order로 정렬 가능. 폴더 컬렉션은 드래그로 order를 자동 저장하지 않음 → 숫자 필드 사용.
+    sortable_fields: ["order", "id", "title", "author", "category"]
     fields:
       - label: ID
         name: id
         widget: number
         value_type: int
-        hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. 클수록 목록 위쪽에 표시됩니다."
+        hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일명·고유키용; 표시 순서는 아래 '표시 순서' 필드를 씁니다.)"
+      - label: 표시 순서
+        name: order
+        widget: number
+        value_type: int
+        default: 1
+        hint: "숫자가 작을수록 목록 위쪽에 표시됩니다. (1이 맨 위) 같은 숫자면 ID가 큰 글이 위에 옵니다. 순서를 바꾸려면 이 숫자만 고친 뒤 Publish 하세요."
       - label: 카테고리
         name: category
         widget: select

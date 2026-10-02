@@ -209,8 +209,11 @@ function loadPoems() {
     data.author = data.author || '';
     data.isMain = !!data.isMain;
     data.content = contentToHtml(data.content || '');
+    const orderRaw = data.order;
+    const orderNum = orderRaw == null || orderRaw === '' ? null : Number(orderRaw);
     poems.push({
       id: data.id,
+      order: Number.isFinite(orderNum) ? orderNum : null,
       category: data.category,
       title: data.title,
       author: data.author,
@@ -219,7 +222,14 @@ function loadPoems() {
     });
   }
 
-  poems.sort((a, b) => Number(b.id) - Number(a.id));
+  // Lower order = appears first. Missing order → after numbered entries.
+  // Tie-break: higher id first (legacy Date.now() / previous default).
+  poems.sort((a, b) => {
+    const ao = a.order == null ? Number.POSITIVE_INFINITY : Number(a.order);
+    const bo = b.order == null ? Number.POSITIVE_INFINITY : Number(b.order);
+    if (ao !== bo) return ao - bo;
+    return Number(b.id) - Number(a.id);
+  });
   return poems;
 }
 

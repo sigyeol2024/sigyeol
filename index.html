@@ -668,7 +668,12 @@
             });
         }
 
-        const getSortedPoems = arr => [...arr].sort((a, b) => Number(b.id) - Number(a.id));
+        const getSortedPoems = arr => [...arr].sort((a, b) => {
+            const ao = a.order == null || a.order === '' ? Number.POSITIVE_INFINITY : Number(a.order);
+            const bo = b.order == null || b.order === '' ? Number.POSITIVE_INFINITY : Number(b.order);
+            if (ao !== bo) return ao - bo; // lower order = first
+            return Number(b.id) - Number(a.id);
+        });
         const handleSearch = () => { pageStates[currentSection] = 1; renderData(); };
 
         function renderData() {
