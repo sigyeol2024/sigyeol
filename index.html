@@ -614,10 +614,16 @@
         <div class="copyright">Copyright 2026 ⓒ웹진《시결》. Rights reserved</div>
     </footer>
 
-    <script src="poems.js"></script>
+    <script src="poems-index.js"></script>
     <script>
-        let currentPoems = typeof poems !== 'undefined' ? [...poems] : [];
+        // Index is metadata only (no HTML body). Bodies load from poems/{id}.json on open.
+        // Search: title/author/category from index (fast). "본문" searches bodies after
+        // lazy-loading them; "전체검색" stays metadata-only (body full-text is optional later).
+        let currentPoems = typeof poems !== 'undefined' ? poems.map(p => ({ ...p })) : [];
         let currentSection = 'main', previousSection = 'main';
+        const bodyFetchCache = new Map(); // id -> Promise<item> or resolved item with content
+        let bodySearchReady = false;
+        let bodySearchLoading = null;
 
         let rookieClickCount = 0;
         let isArchiveReady = false;
@@ -668,13 +674,74 @@
             });
         }
 
+        function ensurePoemBody(id) {
+            const item = currentPoems.find(p => p.id == id);
+            if (!item) return Promise.resolve(null);
+            if (item.content != null) return Promise.resolve(item);
+            if (bodyFetchCache.has(id)) return bodyFetchCache.get(id);
+            const promise = fetch('poems/' + id + '.json', { cache: 'force-cache' })
+                .then(res => {
+                    if (!res.ok) throw new Error('body ' + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    item.content = data && data.content != null ? data.content : '';
+                    return item;
+                })
+                .catch(err => {
+                    bodyFetchCache.delete(id);
+                    throw err;
+                });
+            bodyFetchCache.set(id, promise);
+            return promise;
+        }
+
+        function ensureAllBodiesForSearch() {
+            if (bodySearchReady) return Promise.resolve();
+            if (bodySearchLoading) return bodySearchLoading;
+            bodySearchLoading = Promise.all(
+                currentPoems.map(p => ensurePoemBody(p.id).catch(() => null))
+            ).then(() => {
+                bodySearchReady = true;
+                bodySearchLoading = null;
+            });
+            return bodySearchLoading;
+        }
+
         const getSortedPoems = arr => [...arr].sort((a, b) => {
             const ao = a.order == null || a.order === '' ? Number.POSITIVE_INFINITY : parseFloat(a.order);
             const bo = b.order == null || b.order === '' ? Number.POSITIVE_INFINITY : parseFloat(b.order);
             if (ao !== bo) return ao - bo; // lower order = first
             return Number(b.id) - Number(a.id);
         });
-        const handleSearch = () => { pageStates[currentSection] = 1; renderData(); };
+
+        function matchesSearch(p, type, kw) {
+            const t = (p.title || '').toLowerCase();
+            const a = (p.author || '').toLowerCase();
+            const cat = (p.category || '').toLowerCase();
+            if (type === 'title') return t.includes(kw);
+            if (type === 'author') return a.includes(kw);
+            if (type === 'content') {
+                const c = (p.content || '').toLowerCase();
+                return c.includes(kw);
+            }
+            // 전체검색: metadata only (title / author / category). Body full-text → use 본문.
+            return t.includes(kw) || a.includes(kw) || cat.includes(kw);
+        }
+
+        async function handleSearch() {
+            pageStates[currentSection] = 1;
+            const type = document.getElementById('search-type').value;
+            const kw = document.getElementById('search-keyword').value.trim();
+            if (kw && type === 'content' && !bodySearchReady) {
+                const gridHint = document.querySelector('.page-section.active .poetry-grid');
+                if (gridHint) gridHint.innerHTML = '<div class="no-result">본문 검색을 준비하는 중…</div>';
+                try {
+                    await ensureAllBodiesForSearch();
+                } catch (e) { /* partial results ok */ }
+            }
+            renderData();
+        }
 
         function renderData() {
             const type = document.getElementById('search-type').value;
@@ -682,10 +749,7 @@
             let filtered = getSortedPoems(currentPoems);
 
             if (kw) {
-                filtered = filtered.filter(p => {
-                    const t = (p.title || "").toLowerCase(), a = (p.author || "").toLowerCase(), c = (p.content || "").toLowerCase();
-                    return type === 'title' ? t.includes(kw) : type === 'author' ? a.includes(kw) : type === 'content' ? c.includes(kw) : (t.includes(kw) || a.includes(kw) || c.includes(kw));
-                });
+                filtered = filtered.filter(p => matchesSearch(p, type, kw));
             }
 
             const categories = ['main', '신작시', '주목한 시', '신인상', '공지사항', '아카이브'];
@@ -780,11 +844,15 @@
         }
 
         function showPoemDetail(id) {
-            const item = currentPoems.find(p => p.id == id); if (!item) return;
+            const item = currentPoems.find(p => p.id == id);
+            if (!item) return;
+
             document.getElementById('detail-category').innerText = item.category;
             document.getElementById('detail-title').innerText = item.title;
             document.getElementById('detail-author').innerText = item.author;
-            document.getElementById('detail-content').innerHTML = item.content;
+            document.getElementById('detail-content').innerHTML = item.content != null
+                ? item.content
+                : '<div class="no-result">불러오는 중…</div>';
 
             const copyBtn = document.getElementById('copy-link-btn');
             if (copyBtn) {
@@ -792,6 +860,22 @@
             }
 
             showSection('poem-detail');
+
+            if (item.content == null) {
+                ensurePoemBody(id).then(loaded => {
+                    const still = new URLSearchParams(window.location.search).get('id');
+                    if (still != id) return; // navigated away
+                    if (!loaded) {
+                        document.getElementById('detail-content').innerHTML = '<div class="no-result">본문을 불러오지 못했습니다.</div>';
+                        return;
+                    }
+                    document.getElementById('detail-content').innerHTML = loaded.content || '';
+                }).catch(() => {
+                    const still = new URLSearchParams(window.location.search).get('id');
+                    if (still != id) return;
+                    document.getElementById('detail-content').innerHTML = '<div class="no-result">본문을 불러오지 못했습니다.</div>';
+                });
+            }
         }
 
         function goBack() { 

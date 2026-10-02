@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 /**
- * content/poems/*.json → poems.js
- * Netlify build 또는 로컬에서: npm run build / node scripts/build-poems.js
+ * content/poems/*.json → poems-index.js + poems/{id}.json
+ *
+ * Index (metadata only): id, order, category, title, author, isMain
+ * Bodies: poems/{id}.json with { id, content } — fetched on demand by the site.
+ *
+ * Also writes poems.js as a copy of the light index so legacy admin
+ * (order-autoset) and docs that still mention poems.js keep working.
+ *
+ * Netlify: npm run build / node scripts/build-poems.js
  *
  * content 필드는 Decap poem-html 위젯이 저장하는 HTML을 우선 사용합니다.
  * (레거시 마크다운은 HTML로 변환; 이미 HTML이면 그대로 통과)
@@ -11,7 +18,9 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content', 'poems');
-const OUT_FILE = path.join(ROOT, 'poems.js');
+const OUT_INDEX = path.join(ROOT, 'poems-index.js');
+const OUT_LEGACY = path.join(ROOT, 'poems.js'); // light index alias
+const OUT_BODIES_DIR = path.join(ROOT, 'poems');
 
 function escapeHtml(s) {
   return String(s)
@@ -238,20 +247,67 @@ function loadPoems() {
   return poems;
 }
 
+function toIndexEntry(p) {
+  return {
+    id: p.id,
+    order: p.order,
+    category: p.category,
+    title: p.title,
+    author: p.author,
+    isMain: p.isMain,
+  };
+}
+
+function writeOutputs(poems) {
+  fs.mkdirSync(OUT_BODIES_DIR, { recursive: true });
+
+  const index = poems.map(toIndexEntry);
+  const indexJs =
+    'const poems = ' +
+    JSON.stringify(index, null, 2) +
+    ';\n';
+  fs.writeFileSync(OUT_INDEX, indexJs, 'utf8');
+  fs.writeFileSync(OUT_LEGACY, indexJs, 'utf8');
+
+  const keep = new Set();
+  for (const p of poems) {
+    const bodyPath = path.join(OUT_BODIES_DIR, String(p.id) + '.json');
+    const body = { id: p.id, content: p.content };
+    fs.writeFileSync(bodyPath, JSON.stringify(body) + '\n', 'utf8');
+    keep.add(String(p.id) + '.json');
+  }
+
+  // Remove stale body files from previous builds
+  for (const name of fs.readdirSync(OUT_BODIES_DIR)) {
+    if (!name.endsWith('.json')) continue;
+    if (!keep.has(name)) {
+      fs.unlinkSync(path.join(OUT_BODIES_DIR, name));
+    }
+  }
+
+  return { indexCount: index.length, bodiesDir: OUT_BODIES_DIR };
+}
+
 module.exports = {
   contentToHtml,
   looksLikeHtml,
   markdownToContentHtml,
   normalizePoemHtml,
   loadPoems,
+  toIndexEntry,
+  writeOutputs,
   CONTENT_DIR,
-  OUT_FILE,
+  OUT_INDEX,
+  OUT_LEGACY,
+  OUT_BODIES_DIR,
+  OUT_FILE: OUT_LEGACY, // back-compat for any require() of OUT_FILE
   ROOT,
 };
 
 if (require.main === module) {
   const poems = loadPoems();
-  const out = 'const poems = ' + JSON.stringify(poems, null, 2) + ';\n';
-  fs.writeFileSync(OUT_FILE, out, 'utf8');
-  console.log(`Wrote ${poems.length} poems → ${path.relative(ROOT, OUT_FILE)}`);
+  const { indexCount } = writeOutputs(poems);
+  console.log(
+    `Wrote ${indexCount} poems → ${path.relative(ROOT, OUT_INDEX)} + ${path.relative(ROOT, OUT_BODIES_DIR)}/{id}.json (and light ${path.relative(ROOT, OUT_LEGACY)})`
+  );
 }

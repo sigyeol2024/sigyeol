@@ -1,7 +1,7 @@
 {
   "name": "sigyeol",
   "private": true,
-  "description": "시 전문 웹진 시결 — Decap CMS + static poems.js build",
+  "description": "시 전문 웹진 시결 — Decap CMS + poems-index + per-poem body build",
   "scripts": {
     "build": "node scripts/build-poems.js"
   },

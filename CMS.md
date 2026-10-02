@@ -1,6 +1,6 @@
 # 시결 Decap CMS 안내
 
-브라우저에서 시를 쓰고 `main`에 커밋하면 Netlify가 자동으로 [sigyeol.com](https://sigyeol.com)에 반영합니다. `poems.js`를 직접 업로드할 필요가 없습니다.
+브라우저에서 시를 쓰고 `main`에 커밋하면 Netlify가 자동으로 [sigyeol.com](https://sigyeol.com)에 반영합니다. 빌드 산출물(`poems-index.js`, `poems/*.json`)을 직접 업로드할 필요가 없습니다.
 
 공개 사이트에는 편집기와 다운로드 기능이 없으며, 글 작성·수정·발행은 `/admin/` CMS에서만 합니다.
 
@@ -54,7 +54,7 @@ backend:
 1. `/admin/` 로그인 → 원하는 **카테고리** 컬렉션(예: 신작시)
 2. 기존 글을 열어 제목·본문 등을 고친 뒤 **Publish** (바로 `main`에 커밋)
 3. 새 글: **New 글** → **ID**에 `Date.now()` 숫자(예: 브라우저 콘솔에서 `Date.now()` 실행) → **표시 순서**는 비워 두면 해당 카테고리 맨 위에 자동 배치(아래 규칙) → 제목·작가·본문 입력 → Publish
-4. 1~2분 뒤 사이트에서 확인 (Netlify가 `npm run build`로 `poems.js`를 다시 만듭니다)
+4. 1~2분 뒤 사이트에서 확인 (Netlify가 `npm run build`로 `poems-index.js`와 `poems/{id}.json`을 다시 만듭니다)
 
 메인 페이지 카드에 올리려면 **메인 페이지 노출** 을 켭니다.
 
@@ -110,7 +110,7 @@ backend:
 - 시의 각 줄: **Enter**
 - 빈 줄(연 구분 등): Enter를 한 번 더 — 여러 빈 줄도 그대로 유지됩니다
 
-저장 후 Netlify 빌드가 `content/poems/*.json` → `poems.js`로 합칩니다. HTML 본문은 사이트 역사적 형식(`<div style="text-align: …">` + 줄마다 `<div>`)에 맞춰 그대로 쓰입니다.
+저장 후 Netlify 빌드가 `content/poems/*.json` → `poems-index.js`(메타) + `poems/{id}.json`(본문)으로 나눕니다. HTML 본문은 사이트 역사적 형식(`<div style="text-align: …">` + 줄마다 `<div>`)에 맞춰 그대로 쓰입니다. 사이트가 처음에는 인덱스만 받고, 시를 열 때 본문 JSON을 가져옵니다.
 
 ## 로컬에서 데이터만 다시 만들기
 
@@ -118,13 +118,14 @@ backend:
 npm run build
 ```
 
-`content/poems/*.json` → `poems.js`
+`content/poems/*.json` → `poems-index.js` + `poems/{id}.json`
 
 ## 참고
 
 - 소스: `content/poems/` (글당 JSON 1개, 카테고리 공통 폴더)
 - CMS: `admin/config.yml` — 카테고리별 filtered collections
-- 사이트는 예전처럼 `index.html` + `poems.js` 를 읽습니다.
+- 사이트: `index.html` + `poems-index.js` (목록), 열 때 `poems/{id}.json` (본문)
+- 검색: 제목·작가·카테고리는 인덱스; 본문 검색은 본문 파일을 그때 로드
 - 커스텀 위젯: `admin/poem-editor.js`
 - 새 글 순서 자동 할당: `admin/order-autoset.js` (preSave)
 - DNS·Netlify 사이트 삭제와는 무관합니다. Identity / Git Gateway만 켜면 됩니다.

@@ -55,16 +55,22 @@
   }
 
   function fetchPublishedPoems() {
-    return fetch('/poems.js?_=' + Date.now(), { cache: 'no-store' })
-      .then(function (res) {
-        if (!res.ok) throw new Error('poems.js ' + res.status);
-        return res.text();
-      })
-      .then(function (text) {
-        var poems = extractPoemsArray(text);
-        if (!poems) throw new Error('could not parse poems.js');
-        return poems;
-      });
+    function load(url) {
+      return fetch(url + '?_=' + Date.now(), { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error(url + ' ' + res.status);
+          return res.text();
+        })
+        .then(function (text) {
+          var poems = extractPoemsArray(text);
+          if (!poems) throw new Error('could not parse ' + url);
+          return poems;
+        });
+    }
+    // Prefer light index; poems.js is the same light alias for back-compat.
+    return load('/poems-index.js').catch(function () {
+      return load('/poems.js');
+    });
   }
 
   CMS.registerEventListener({
