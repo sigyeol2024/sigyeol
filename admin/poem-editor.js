@@ -108,21 +108,7 @@
     return '';
   }
 
-  function preferDarkDefault() {
-    try {
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    } catch (e) {
-      return false;
-    }
-  }
-
   var PoemHtmlControl = createClass({
-    getInitialState: function () {
-      return {
-        stageTheme: preferDarkDefault() ? 'dark' : 'light',
-      };
-    },
-
     componentDidMount: function () {
       this._applyHtml(toEditorHtml(this.props.value));
     },
@@ -155,18 +141,11 @@
       this.emitChange();
     },
 
-    toggleStageTheme: function () {
-      this.setState({
-        stageTheme: this.state.stageTheme === 'dark' ? 'light' : 'dark',
-      });
-    },
-
     render: function () {
       var self = this;
       var title = entryField(this.props.entry, 'title');
       var author = entryField(this.props.entry, 'author');
       var hasMeta = !!(title || author);
-      var isDark = this.state.stageTheme === 'dark';
 
       function toolBtn(label, cmd, titleAttr) {
         return h(
@@ -197,26 +176,11 @@
           toolBtn('좌', 'justifyLeft', '왼쪽 정렬'),
           toolBtn('중', 'justifyCenter', '가운데 정렬'),
           toolBtn('우', 'justifyRight', '오른쪽 정렬'),
-          h('span', { className: 'sigyeol-poem-toolbar-spacer' }),
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'sigyeol-poem-theme-btn',
-              title: isDark ? '밝은 배경으로 보기' : '어두운 배경으로 보기',
-              onMouseDown: function (e) {
-                e.preventDefault();
-                self.toggleStageTheme();
-              },
-            },
-            isDark ? '밝은 배경' : '어두운 배경'
-          )
         ),
         h(
           'div',
           {
-            className:
-              'sigyeol-poem-stage ' + (isDark ? 'is-dark' : 'is-light'),
+            className: 'sigyeol-poem-stage',
           },
           h(
             'div',
@@ -272,7 +236,7 @@
         { className: 'sigyeol-poem-widget' },
         h(
           'div',
-          { className: 'sigyeol-poem-stage is-light', style: { borderRadius: '4px' } },
+          { className: 'sigyeol-poem-stage', style: { borderRadius: '4px' } },
           h(
             'div',
             { className: 'sigyeol-poem-card' },

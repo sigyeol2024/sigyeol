@@ -43,17 +43,6 @@
   margin: 0 6px;
 }
 
-.sigyeol-poem-toolbar-spacer {
-  flex: 1;
-  min-width: 8px;
-}
-
-.sigyeol-poem-theme-btn {
-  font-size: 12px !important;
-  letter-spacing: 0.02em;
-  color: #5c5c5c !important;
-}
-
 /* Poem stage — like .poem-detail-container */
 .sigyeol-poem-stage {
   --sg-bg: #ffffff;
@@ -70,30 +59,6 @@
   border-radius: 0 0 4px 4px;
   padding: 28px 16px 32px;
   outline: none;
-}
-
-.sigyeol-poem-stage.is-dark {
-  --sg-bg: #1c1c1c;
-  --sg-bg-outer: #141414;
-  --sg-text: #e8e8e8;
-  --sg-text-secondary: #a0a0a0;
-  --sg-border: #2c2c2c;
-  --sg-border-card: #2e2e2e;
-  --sg-green: #4aad7a;
-  --sg-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-}
-
-@media (prefers-color-scheme: dark) {
-  .sigyeol-poem-stage:not(.is-light) {
-    --sg-bg: #1c1c1c;
-    --sg-bg-outer: #141414;
-    --sg-text: #e8e8e8;
-    --sg-text-secondary: #a0a0a0;
-    --sg-border: #2c2c2c;
-    --sg-border-card: #2e2e2e;
-    --sg-green: #4aad7a;
-    --sg-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-  }
 }
 
 .sigyeol-poem-card {
