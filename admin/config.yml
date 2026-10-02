@@ -53,7 +53,20 @@ collections:
         name: isMain
         widget: boolean
         default: false
-      - label: 본문 (HTML)
+      - label: 본문
         name: content
-        widget: text
-        hint: "기존 서식 유지를 위해 HTML을 그대로 둡니다. 간단한 글은 <div>줄</div> 형태로 작성해도 됩니다."
+        widget: markdown
+        minimal: false
+        buttons:
+          - bold
+          - italic
+          - link
+          - quote
+          - bulleted-list
+          - numbered-list
+          - heading-two
+        editor_components: []
+        modes:
+          - rich_text
+          - raw
+        hint: "굵게·기울임 등 도구모음으로 서식할 수 있습니다. 시의 줄바꿈은 Enter로 한 줄씩 입력하세요. 빈 줄은 Enter를 한 번 더 누르면 됩니다."
