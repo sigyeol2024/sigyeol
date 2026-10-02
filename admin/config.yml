@@ -55,18 +55,5 @@ collections:
         default: false
       - label: 본문
         name: content
-        widget: markdown
-        minimal: false
-        buttons:
-          - bold
-          - italic
-          - link
-          - quote
-          - bulleted-list
-          - numbered-list
-          - heading-two
-        editor_components: []
-        modes:
-          - rich_text
-          - raw
-        hint: "굵게·기울임 등 도구모음으로 서식할 수 있습니다. 시의 줄바꿈은 Enter로 한 줄씩 입력하세요. 빈 줄은 Enter를 한 번 더 누르면 됩니다."
+        widget: poem-html
+        hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장되며 사이트의 시 본문과 같은 형태입니다."
