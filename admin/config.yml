@@ -1,6 +1,9 @@
 # Decap CMS — 시결 (sigyeol.com)
 # 로그인: Netlify Identity + Git Gateway (Netlify 대시보드에서 활성화 필요)
 # 대안: 아래 backend를 github로 바꿀 수 있음 (repo: sigyeol2024/sigyeol, branch: main)
+#
+# 카테고리별 컬렉션: 모두 content/poems/ 에 JSON을 두고 category 필드로 필터합니다.
+# /admin 사이드바에 신작시 · 주목한 시 · 신인상 · 공지사항 · 아카이브가 각각 보입니다.
 
 backend:
   name: git-gateway
@@ -13,9 +16,48 @@ public_folder: /static/media
 
 # 바로 발행 (editorial workflow 끔)
 
+# 공통 필드 (YAML anchors) — 카테고리 hidden default만 컬렉션마다 다름
+x-field-id: &field_id
+  label: ID
+  name: id
+  widget: number
+  value_type: int
+  hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일명·고유키용; 표시 순서는 아래 '표시 순서' 필드를 씁니다.)"
+
+x-field-order: &field_order
+  label: 표시 순서
+  name: order
+  widget: number
+  value_type: int
+  default: 1
+  hint: "숫자가 작을수록 목록 위쪽에 표시됩니다. (1이 맨 위) 같은 숫자면 ID가 큰 글이 위에 옵니다. 순서를 바꾸려면 이 숫자만 고친 뒤 Publish 하세요."
+
+x-field-title: &field_title
+  label: 제목
+  name: title
+  widget: string
+
+x-field-author: &field_author
+  label: 작가명
+  name: author
+  widget: string
+  default: ""
+
+x-field-ismain: &field_ismain
+  label: 메인 페이지 노출
+  name: isMain
+  widget: boolean
+  default: false
+
+x-field-content: &field_content
+  label: 본문
+  name: content
+  widget: poem-html
+  hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장됩니다."
+
 collections:
-  - name: poems
-    label: 시·공지
+  - name: poems_new
+    label: 신작시
     label_singular: 글
     folder: content/poems
     create: true
@@ -24,43 +66,127 @@ collections:
     extension: json
     format: json
     identifier_field: title
-    summary: "{{order}} · {{title}} — {{author}} ({{category}})"
-    # 목록 화면에서 order로 정렬 가능. 폴더 컬렉션은 드래그로 order를 자동 저장하지 않음 → 숫자 필드 사용.
-    sortable_fields: ["order", "id", "title", "author", "category"]
+    summary: "{{order}} · {{title}} — {{author}}"
+    sortable_fields: ["order", "id", "title", "author"]
+    filter:
+      field: category
+      value: 신작시
     fields:
-      - label: ID
-        name: id
-        widget: number
-        value_type: int
-        hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일명·고유키용; 표시 순서는 아래 '표시 순서' 필드를 씁니다.)"
-      - label: 표시 순서
-        name: order
-        widget: number
-        value_type: int
-        default: 1
-        hint: "숫자가 작을수록 목록 위쪽에 표시됩니다. (1이 맨 위) 같은 숫자면 ID가 큰 글이 위에 옵니다. 순서를 바꾸려면 이 숫자만 고친 뒤 Publish 하세요."
+      - *field_id
+      - *field_order
       - label: 카테고리
         name: category
-        widget: select
-        options:
-          - 신작시
-          - 주목한 시
-          - 신인상
-          - 공지사항
-          - 아카이브
+        widget: hidden
         default: 신작시
-      - label: 제목
-        name: title
-        widget: string
-      - label: 작가명
-        name: author
-        widget: string
-        default: ""
-      - label: 메인 페이지 노출
-        name: isMain
-        widget: boolean
-        default: false
-      - label: 본문
-        name: content
-        widget: poem-html
-        hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬 (+ 밝은/어두운 배경 미리보기). Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. 편집 화면은 시결 본문 보기와 비슷한 서체·여백이며 HTML로 저장됩니다."
+      - *field_title
+      - *field_author
+      - *field_ismain
+      - *field_content
+
+  - name: poems_spotlight
+    label: 주목한 시
+    label_singular: 글
+    folder: content/poems
+    create: true
+    delete: true
+    slug: "{{id}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{order}} · {{title}} — {{author}}"
+    sortable_fields: ["order", "id", "title", "author"]
+    filter:
+      field: category
+      value: 주목한 시
+    fields:
+      - *field_id
+      - *field_order
+      - label: 카테고리
+        name: category
+        widget: hidden
+        default: 주목한 시
+      - *field_title
+      - *field_author
+      - *field_ismain
+      - *field_content
+
+  - name: poems_rookie
+    label: 신인상
+    label_singular: 글
+    folder: content/poems
+    create: true
+    delete: true
+    slug: "{{id}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{order}} · {{title}} — {{author}}"
+    sortable_fields: ["order", "id", "title", "author"]
+    filter:
+      field: category
+      value: 신인상
+    fields:
+      - *field_id
+      - *field_order
+      - label: 카테고리
+        name: category
+        widget: hidden
+        default: 신인상
+      - *field_title
+      - *field_author
+      - *field_ismain
+      - *field_content
+
+  - name: poems_notice
+    label: 공지사항
+    label_singular: 글
+    folder: content/poems
+    create: true
+    delete: true
+    slug: "{{id}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{order}} · {{title}} — {{author}}"
+    sortable_fields: ["order", "id", "title", "author"]
+    filter:
+      field: category
+      value: 공지사항
+    fields:
+      - *field_id
+      - *field_order
+      - label: 카테고리
+        name: category
+        widget: hidden
+        default: 공지사항
+      - *field_title
+      - *field_author
+      - *field_ismain
+      - *field_content
+
+  - name: poems_archive
+    label: 아카이브
+    label_singular: 글
+    folder: content/poems
+    create: true
+    delete: true
+    slug: "{{id}}"
+    extension: json
+    format: json
+    identifier_field: title
+    summary: "{{order}} · {{title}} — {{author}}"
+    sortable_fields: ["order", "id", "title", "author"]
+    filter:
+      field: category
+      value: 아카이브
+    fields:
+      - *field_id
+      - *field_order
+      - label: 카테고리
+        name: category
+        widget: hidden
+        default: 아카이브
+      - *field_title
+      - *field_author
+      - *field_ismain
+      - *field_content
