@@ -9,4 +9,4 @@
 - `scripts/build-poems.js` — content → poems.js
 
 편집 방법: [CMS.md](./CMS.md)  
-(구) poems.js 수동 업로드: [발행.md](./발행.md)
+공개 사이트는 읽기 전용이며, `poems.js`는 CMS 콘텐츠에서 자동 생성됩니다.

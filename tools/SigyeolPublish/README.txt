@@ -1,11 +1,9 @@
-시결 발행 (바탕화면용)
-====================
+시결 발행 도구 (사용 중지)
+===========================
 
-1. 「시결발행.bat」을 더블클릭합니다.
-2. 처음 한 번만 GitHub Personal Access Token을 넣습니다.
-   - https://github.com/settings/tokens 에서 classic token
-   - repo 권한만 켜면 됩니다.
-3. 관리자에서 받은 poems.js를 고른 뒤 「올리기」를 누릅니다.
-4. 1~2분 뒤 https://sigyeol.com 에 반영됩니다.
+공개 사이트의 사이트 내 관리자와 `poems.js` 다운로드·수동 업로드 방식은 제거되었습니다.
+이 도구는 더 이상 사용하지 말고, 글 작성·수정·발행은 아래 CMS에서만 진행하세요.
 
-Grok Bot 구독과 무관하게 이 PC에서만으로 동작합니다.
+https://sigyeol.com/admin/
+
+설정과 사용 방법은 저장소의 CMS.md를 참고합니다.

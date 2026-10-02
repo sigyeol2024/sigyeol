@@ -2,6 +2,8 @@
 
 브라우저에서 시를 쓰고 `main`에 커밋하면 Netlify가 자동으로 [sigyeol.com](https://sigyeol.com)에 반영합니다. `poems.js`를 직접 업로드할 필요가 없습니다.
 
+공개 사이트에는 편집기와 다운로드 기능이 없으며, 글 작성·수정·발행은 `/admin/` CMS에서만 합니다.
+
 ## 관리자 열기
 
 1. 배포 후 **https://sigyeol.com/admin/** 로 이동합니다.

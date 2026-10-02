@@ -264,33 +264,6 @@
         }
         .search-btn:hover { color: var(--sigyeol-green); }
 
-        /* Admin Bar */
-        .admin-bar {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            background: #1a1a1a;
-            color: #f0f0f0;
-            padding: 14px 22px;
-            font-size: 0.82rem;
-            margin-bottom: 36px;
-            border-radius: var(--radius);
-            letter-spacing: 0.02em;
-        }
-        .admin-bar.active { display: flex; }
-        .admin-btn {
-            background: #fff;
-            color: #1a1a1a;
-            border: none;
-            padding: 7px 16px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.78rem;
-            border-radius: var(--radius);
-            transition: opacity 0.2s;
-        }
-        .admin-btn:hover { opacity: 0.88; }
-
         /* ========== Grid & Cards ========== */
         .poetry-grid {
             display: grid;
@@ -366,30 +339,6 @@
         }
         .poetry-card:hover .read-more {
             color: var(--sigyeol-green);
-        }
-
-        .card-admin-actions {
-            display: none;
-            margin-top: 14px;
-            gap: 10px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 12px;
-            flex-wrap: wrap;
-        }
-        .card-admin-actions.active { display: flex; }
-        .action-btn {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            transition: color 0.2s;
-        }
-        .action-btn:hover { color: var(--text-primary); }
-        .action-btn.featured {
-            color: var(--sigyeol-green);
-            font-weight: 600;
         }
 
         /* Pagination */
@@ -518,110 +467,6 @@
             background: var(--bg-elevated);
         }
 
-        /* ========== Modal ========== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(20, 20, 20, 0.55);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.25s ease; }
-
-        .modal-box {
-            background: var(--bg-card);
-            padding: 36px 32px;
-            width: 90%;
-            max-width: 560px;
-            border: 1px solid var(--border-color);
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 4px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-        .modal-box h2 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            letter-spacing: 0.04em;
-        }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label {
-            display: block;
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            letter-spacing: 0.03em;
-        }
-        .form-group input[type="text"],
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-main);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.9rem;
-            border-radius: var(--radius);
-            outline: none;
-            transition: border-color var(--transition);
-        }
-        .form-group input[type="text"]:focus,
-        .form-group select:focus {
-            border-color: var(--sigyeol-green);
-        }
-
-        .editor-toolbar {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            padding: 8px;
-            border-radius: var(--radius) var(--radius) 0 0;
-        }
-        .editor-toolbar button {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 5px 11px;
-            font-size: 0.78rem;
-            cursor: pointer;
-            border-radius: var(--radius);
-            color: var(--text-secondary);
-            transition: all 0.15s;
-            font-family: inherit;
-        }
-        .editor-toolbar button:hover {
-            background: var(--sigyeol-green-soft);
-            color: var(--sigyeol-green);
-            border-color: var(--sigyeol-green);
-        }
-        .editor-content {
-            min-height: 180px;
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            font-size: 0.92rem;
-            line-height: 1.9;
-            outline: none;
-            background: var(--bg-main);
-            overflow-y: auto;
-            text-indent: 0.8em;
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 24px;
-        }
-
         /* ========== Footer ========== */
         footer {
             margin-top: 100px;
@@ -690,11 +535,6 @@
             }
             .section-header-title { font-size: 1.2rem; letter-spacing: 0.14em; }
             footer { margin-top: 64px; padding: 36px 16px 32px; }
-            .admin-bar {
-                flex-direction: column;
-                gap: 12px;
-                text-align: center;
-            }
         }
 
         @media (max-width: 400px) {
@@ -712,7 +552,7 @@
             <button class="header-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
         </div>
 
-        <div class="site-title-wrapper" onclick="handleTitleClick()">
+        <div class="site-title-wrapper" onclick="navigateToSection('main')">
             <span class="title-char-si">시</span>
             <span class="title-char-gyeol">결</span>
         </div>
@@ -730,15 +570,6 @@
     </header>
 
     <main>
-        <div id="admin-bar" class="admin-bar">
-            <span>ADMIN MODE (작성 후 'poems.js 다운로드'를 꼭 눌러주세요)</span>
-            <div>
-                <button class="admin-btn" onclick="openWriteModal()">+ 새 글 작성</button>
-                <button class="admin-btn" onclick="downloadPoemsFile()" style="background:#2f6b4f; color:#fff; margin-left:5px;">📥 poems.js 다운로드</button>
-                <button class="admin-btn" onclick="toggleAdminMode()" style="background:#444; color:#fff; margin-left:5px;">종료</button>
-            </div>
-        </div>
-
         <div id="search-container" class="search-container">
             <select id="search-type" class="search-select">
                 <option value="all">전체검색</option>
@@ -776,47 +607,6 @@
         </section>
     </main>
 
-    <!-- Modal Form -->
-    <div id="modal-overlay" class="modal-overlay">
-        <div class="modal-box">
-            <h2 id="modal-heading">작품 작성</h2>
-            <input type="hidden" id="edit-id">
-            <div class="form-group">
-                <label for="form-category">카테고리</label>
-                <select id="form-category">
-                    <option value="신작시">신작시</option>
-                    <option value="주목한 시">주목한 시</option>
-                    <option value="신인상">신인상</option>
-                    <option value="공지사항">공지사항</option>
-                    <option value="아카이브">아카이브</option>
-                </select>
-            </div>
-            <div class="form-group"><label for="form-title">제목</label><input type="text" id="form-title"></div>
-            <div class="form-group"><label for="form-author">작가명</label><input type="text" id="form-author"></div>
-            <div class="form-group" style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" id="form-is-main"><label for="form-is-main" style="margin:0; cursor:pointer;">메인 페이지에 노출하기</label>
-            </div>
-            <div class="form-group">
-                <label>시 전문 (본문 서식 편집)</label>
-                <div class="editor-toolbar">
-                    <button type="button" onclick="execCmd('bold')"><b>B</b></button>
-                    <button type="button" onclick="execCmd('italic')"><i>I</i></button>
-                    <button type="button" onclick="execCmd('underline')"><u>U</u></button>
-                    <button type="button" onclick="execCmd('strikeThrough')"><s>S</s></button>
-                    <span style="width:1px; background:var(--border-color); margin:0 4px;"></span>
-                    <button type="button" onclick="execCmd('justifyLeft')">좌 정렬</button>
-                    <button type="button" onclick="execCmd('justifyCenter')">중앙 정렬</button>
-                    <button type="button" onclick="execCmd('justifyRight')">우 정렬</button>
-                </div>
-                <div id="form-content-editor" class="editor-content" contenteditable="true"></div>
-            </div>
-            <div class="form-actions">
-                <button class="admin-btn" onclick="closeModal()" style="background:#eee; color:#333;">취소</button>
-                <button class="admin-btn" onclick="saveItem()" style="background:#1a1a1a; color:#fff;">저장하기</button>
-            </div>
-        </div>
-    </div>
-
     <footer>
         <a href="https://www.instagram.com/sigyeol/" target="_blank" rel="noopener noreferrer" class="instagram-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -827,11 +617,7 @@
     <script src="poems.js"></script>
     <script>
         let currentPoems = typeof poems !== 'undefined' ? [...poems] : [];
-        let isAdmin = false, currentSection = 'main', previousSection = 'main';
-        
-        let titleClickCount = 0;
-        let isAdminReady = false; 
-        let adminTimer = null;
+        let currentSection = 'main', previousSection = 'main';
 
         let rookieClickCount = 0;
         let isArchiveReady = false;
@@ -862,17 +648,6 @@
                 isArchiveReady = false;
                 clearTimeout(archiveTimer);
                 navigateToSection('archive');
-            } else if (isAdminReady) {
-                isAdminReady = false;
-                clearTimeout(adminTimer);
-                
-                if (isAdmin) {
-                    toggleAdminMode();
-                } else {
-                    const pw = prompt("관리자 비밀번호를 입력하세요:");
-                    if (pw === "wlfakwotlsghk5") toggleAdminMode();
-                    else if (pw !== null) alert("비밀번호가 올바르지 않습니다.");
-                }
             } else {
                 openRandomPoem();
             }
@@ -935,11 +710,6 @@
                             <h2 class="poem-title">${item.title}</h2>
                             <p class="poem-author">${item.author}</p>
                             <span class="read-more">READ MORE →</span>
-                        </div>
-                        <div class="card-admin-actions ${isAdmin ? 'active' : ''}">
-                            <button class="action-btn ${item.isMain ? 'featured' : ''}" onclick="toggleMain(${item.id})">${item.isMain ? '★ 메인 노출중' : '☆ 메인 설정'}</button>
-                            <button class="action-btn" onclick="openEditModal(${item.id})">수정</button>
-                            <button class="action-btn" onclick="deleteItem(${item.id})">삭제</button>
                         </div>`;
                     grid.appendChild(card);
                 });
@@ -991,76 +761,6 @@
                 showSection('main');
             }
         });
-
-        function handleTitleClick() {
-            if (++titleClickCount >= 3) {
-                titleClickCount = 0;
-                isAdminReady = true;
-                clearTimeout(adminTimer);
-                adminTimer = setTimeout(() => { isAdminReady = false; }, 8000);
-            } else {
-                setTimeout(() => { if (titleClickCount === 1) { titleClickCount = 0; navigateToSection('main'); } }, 300);
-            }
-        }
-
-        /* 관리자 모드 토글 시 상단 '아카이브' 메뉴 노출 여부 스위칭 */
-        function toggleAdminMode() { 
-            isAdmin = !isAdmin; 
-            document.getElementById('admin-bar').classList.toggle('active', isAdmin); 
-            document.getElementById('nav-item-archive').style.display = isAdmin ? 'inline-block' : 'none';
-            renderData(); 
-        }
-
-        function toggleMain(id) { const item = currentPoems.find(p => p.id === id); if (item) { item.isMain = !item.isMain; renderData(); } }
-        function execCmd(cmd) { document.execCommand(cmd, false, null); }
-
-        function openWriteModal() {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('modal-heading').innerText = '새 글 작성';
-            document.getElementById('form-title').value = ''; document.getElementById('form-author').value = '';
-            document.getElementById('form-is-main').checked = true;
-            document.getElementById('form-content-editor').innerHTML = '<div style="text-align: left;"><br></div>';
-            document.getElementById('modal-overlay').classList.add('active');
-        }
-
-        function openEditModal(id) {
-            const item = currentPoems.find(p => p.id === id); if (!item) return;
-            document.getElementById('edit-id').value = item.id;
-            document.getElementById('modal-heading').innerText = '글 수정하기';
-            document.getElementById('form-category').value = item.category;
-            document.getElementById('form-title').value = item.title;
-            document.getElementById('form-author').value = item.author;
-            document.getElementById('form-is-main').checked = !!item.isMain;
-            document.getElementById('form-content-editor').innerHTML = item.content;
-            document.getElementById('modal-overlay').classList.add('active');
-        }
-
-        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
-
-        function saveItem() {
-            const id = document.getElementById('edit-id').value, cat = document.getElementById('form-category').value;
-            const title = document.getElementById('form-title').value, author = document.getElementById('form-author').value;
-            const isMain = document.getElementById('form-is-main').checked, content = document.getElementById('form-content-editor').innerHTML;
-            if (!title || !content.trim()) return alert('제목과 내용을 입력해 주세요.');
-
-            if (id) {
-                const idx = currentPoems.findIndex(p => p.id == id);
-                currentPoems[idx] = { id: Number(id), category: cat, title, author, isMain, content };
-            } else {
-                currentPoems.push({ id: Date.now(), category: cat, title, author, isMain, content });
-            }
-            closeModal(); renderData();
-        }
-
-        function deleteItem(id) { if (confirm('정말 삭제하시겠습니까?')) { currentPoems = currentPoems.filter(p => p.id !== id); renderData(); } }
-
-        function downloadPoemsFile() {
-            const data = "const poems = " + JSON.stringify(getSortedPoems(currentPoems), null, 2) + ";";
-            const blob = new Blob([data], { type: "text/javascript" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a"); a.href = url; a.download = "poems.js";
-            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        }
 
         function showSection(secId) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
