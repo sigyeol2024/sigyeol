@@ -25,12 +25,13 @@ x-field-id: &field_id
   hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일명·고유키용; 표시 순서는 아래 '표시 순서' 필드를 씁니다.)"
 
 x-field-order: &field_order
-  label: 표시 순서
+  label: "표시 순서 — 작을수록 위. 사이에 넣으려면 55.5처럼 소수 가능."
   name: order
   widget: number
-  value_type: int
-  default: 1
-  hint: "숫자가 작을수록 목록 위쪽에 표시됩니다. (1이 맨 위) 같은 숫자면 ID가 큰 글이 위에 옵니다. 순서를 바꾸려면 이 숫자만 고친 뒤 Publish 하세요."
+  value_type: float
+  step: 0.1
+  required: false
+  hint: "작을수록 위. 비워 두고 Publish하면 해당 카테고리 최솟값−1이 자동으로 들어가 맨 위에 옵니다. 55와 56 사이는 55.5처럼 소수를 쓰세요. 같은 숫자면 ID가 큰 글이 위입니다."
 
 x-field-title: &field_title
   label: 제목

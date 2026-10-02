@@ -210,7 +210,10 @@ function loadPoems() {
     data.isMain = !!data.isMain;
     data.content = contentToHtml(data.content || '');
     const orderRaw = data.order;
-    const orderNum = orderRaw == null || orderRaw === '' ? null : Number(orderRaw);
+    const orderNum =
+      orderRaw == null || orderRaw === ''
+        ? null
+        : parseFloat(String(orderRaw).trim());
     poems.push({
       id: data.id,
       order: Number.isFinite(orderNum) ? orderNum : null,
@@ -222,11 +225,13 @@ function loadPoems() {
     });
   }
 
-  // Lower order = appears first. Missing order → after numbered entries.
+  // Lower order = appears first (numeric parseFloat). Missing → after numbered.
   // Tie-break: higher id first (legacy Date.now() / previous default).
   poems.sort((a, b) => {
-    const ao = a.order == null ? Number.POSITIVE_INFINITY : Number(a.order);
-    const bo = b.order == null ? Number.POSITIVE_INFINITY : Number(b.order);
+    const ao =
+      a.order == null ? Number.POSITIVE_INFINITY : parseFloat(a.order);
+    const bo =
+      b.order == null ? Number.POSITIVE_INFINITY : parseFloat(b.order);
     if (ao !== bo) return ao - bo;
     return Number(b.id) - Number(a.id);
   });
