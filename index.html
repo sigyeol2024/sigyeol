@@ -17,67 +17,119 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ========== Folio palette ========== */
         :root {
-            --bg-main: #f7f6f3;
-            --bg-card: #ffffff;
-            --bg-elevated: #fafaf8;
-            --text-primary: #1a1a1a;
-            --text-secondary: #5c5c5c;
-            --text-muted: #8a8a8a;
-            --border-color: #e8e6e1;
-            --border-card: #ebe9e4;
+            --paper: #f3efe8;
+            --ink: #141312;
+            --muted: #6a655d;
+            --rule: #1a1917;
+            --hair: #cfc7bb;
+            --accent: #2f6b4f;
             --sigyeol-green: #2f6b4f;
-            --sigyeol-green-soft: rgba(47, 107, 79, 0.08);
-            --shadow-soft: 0 4px 24px rgba(26, 26, 26, 0.04);
-            --shadow-hover: 0 12px 40px rgba(26, 26, 26, 0.08);
-            --radius: 2px;
+            --text-muted: #8a8a8a;
+            --serif: 'Noto Serif KR', 'Batang', serif;
+            --sans: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
             --transition: 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         body.dark-mode {
-            --bg-main: #141414;
-            --bg-card: #1c1c1c;
-            --bg-elevated: #222222;
-            --text-primary: #e8e8e8;
-            --text-secondary: #a0a0a0;
-            --text-muted: #6e6e6e;
-            --border-color: #2c2c2c;
-            --border-card: #2e2e2e;
+            --paper: #151413;
+            --ink: #e7e2d9;
+            --muted: #9a948a;
+            --rule: #d6d0c5;
+            --hair: #36332f;
+            --accent: #6fb390;
             --sigyeol-green: #4aad7a;
-            --sigyeol-green-soft: rgba(74, 173, 122, 0.12);
-            --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.25);
-            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.35);
+            --text-muted: #7f7a72;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { -webkit-text-size-adjust: 100%; }
         body {
-            font-family: 'Noto Serif KR', 'Batang', serif;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            line-height: 1.85;
+            font-family: var(--sans);
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
             word-break: keep-all;
+            overflow-wrap: break-word;
             transition: background-color var(--transition), color var(--transition);
             -webkit-font-smoothing: antialiased;
         }
 
         a { color: inherit; text-decoration: none; }
+        a:hover { color: var(--accent); }
+        button { font-family: inherit; }
 
-        /* ========== Header ========== */
-        header {
-            width: 100%;
-            padding: 48px 24px 36px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--bg-card);
-            position: relative;
-            transition: background-color var(--transition), border-color var(--transition);
+        .page {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 18px 28px 56px;
         }
 
+        /* ========== Running header ========== */
+        .run-head {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.65rem;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            padding: 6px 0 8px;
+            border-bottom: 1px solid var(--rule);
+            text-transform: uppercase;
+            transition: border-color var(--transition);
+        }
+        .run-head .rh-left { white-space: nowrap; }
+        .run-head .rh-mid {
+            letter-spacing: 0.22em;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 340px;
+        }
+        .run-head .rh-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 14px;
+            white-space: nowrap;
+        }
+        .text-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            color: inherit;
+            font: inherit;
+            letter-spacing: inherit;
+            text-transform: inherit;
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+        .text-btn:hover { color: var(--accent); }
+        .theme-toggle-btn { color: var(--muted); }
+        .theme-toggle-btn .t-light,
+        body.dark-mode .theme-toggle-btn .t-dark { display: none; }
+        body.dark-mode .theme-toggle-btn .t-light { display: inline; }
+
+        /* ========== Masthead ========== */
+        .mast {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 24px;
+            align-items: end;
+            padding: 28px 0 18px;
+            border-bottom: 2.5px solid var(--rule);
+            transition: border-color var(--transition);
+        }
+        .logo-lockup { text-align: center; }
+
+        /* Logo: markup, sizes and offsets kept from the original site */
         .site-title-wrapper {
             display: inline-flex;
             flex-direction: column;
@@ -85,12 +137,12 @@
             cursor: pointer;
             user-select: none;
             color: var(--sigyeol-green);
+            font-family: var(--serif);
             line-height: 0.92;
             margin-bottom: 6px;
             transition: opacity var(--transition);
         }
         .site-title-wrapper:hover { opacity: 0.85; }
-
         .title-char-si {
             font-size: 2.5rem;
             font-weight: 500;
@@ -104,8 +156,8 @@
             margin-left: 8px;
             margin-top: -1px;
         }
-
         .site-subtitle {
+            font-family: var(--serif);
             font-size: 0.7rem;
             color: var(--text-muted);
             letter-spacing: 0.35em;
@@ -114,449 +166,465 @@
             font-weight: 400;
         }
 
-        /* Header Controls */
-        .header-controls {
-            position: absolute;
-            top: 28px;
-            right: 28px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .mast-aside {
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-align: right;
+            line-height: 1.7;
+            padding-bottom: 6px;
         }
-        .header-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition: color var(--transition), background-color var(--transition), transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .header-btn:hover {
-            color: var(--text-primary);
-            background: var(--sigyeol-green-soft);
-            transform: scale(1.05);
-        }
-        .theme-toggle-btn .fa-sun,
-        body.dark-mode .theme-toggle-btn .fa-moon { display: none; }
-        body.dark-mode .theme-toggle-btn .fa-sun { display: block; }
 
-        /* Navigation */
-        nav { margin-top: 28px; }
-        nav ul {
+        nav.mast-nav { padding-bottom: 8px; }
+        nav.mast-nav ul {
             list-style: none;
             display: flex;
-            justify-content: center;
-            gap: 32px;
             flex-wrap: wrap;
+            gap: 10px 18px;
+            justify-content: flex-end;
         }
-        nav a {
-            font-size: 0.88rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.06em;
+        nav.mast-nav a {
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            color: var(--muted);
             cursor: pointer;
-            position: relative;
-            padding: 4px 0;
-            transition: color var(--transition);
+            padding-bottom: 1px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--transition), border-color var(--transition);
         }
-        nav a::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 0;
-            height: 1px;
-            background: var(--sigyeol-green);
-            transition: width 0.3s ease;
-        }
-        nav a:hover,
-        nav a.active {
-            color: var(--text-primary);
-        }
-        nav a:hover::after,
-        nav a.active::after {
-            width: 100%;
+        nav.mast-nav a:hover { color: var(--ink); }
+        nav.mast-nav a.active {
+            color: var(--ink);
+            border-bottom-color: var(--ink);
         }
 
         /* ========== Main ========== */
-        main {
-            max-width: 1040px;
-            margin: 48px auto 80px;
-            padding: 0 24px;
-            min-height: 520px;
-        }
+        main { min-height: 480px; }
 
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.4s ease; }
-
+        .page-section.active { display: block; animation: fadeIn 0.35s ease; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 36px;
-            padding-bottom: 22px;
-            border-bottom: 1px solid var(--border-color);
+        .folio-label {
+            font-size: 0.64rem;
+            letter-spacing: 0.22em;
+            color: var(--accent);
+            margin-bottom: 14px;
+            text-transform: uppercase;
         }
-        .section-header-title {
-            font-size: 1.35rem;
+
+        /* ---- Home spread ---- */
+        .spread {
+            display: grid;
+            grid-template-columns: 1.4fr 0.85fr;
+            gap: 0 36px;
+            padding-top: 32px;
+        }
+        .lead {
+            border-right: 1px solid var(--hair);
+            padding-right: 32px;
+            min-width: 0;
+        }
+        .lead-title {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 3.6vw, 2.75rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+        .lead-author {
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--hair);
+        }
+        .lead-body {
+            font-family: var(--serif);
+            font-size: 1.08rem;
+            line-height: 1.95;
+            min-height: 1.95em;
+        }
+        .lead-body p { margin: 0; }
+        .lead-body .sp { height: 0.9em; }
+        .lead-link {
+            display: inline-block;
+            margin-top: 28px;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 3px;
+            cursor: pointer;
+        }
+        .lead-link:hover { border-bottom-color: var(--accent); }
+        .lead-empty {
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        .side-col { padding-top: 4px; min-width: 0; }
+        .toc-h {
+            font-size: 0.64rem;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 8px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .toc-item {
+            display: block;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--hair);
+            cursor: pointer;
+        }
+        .toc-cat {
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .toc-title {
+            font-family: var(--serif);
+            font-size: 1.02rem;
             font-weight: 500;
-            letter-spacing: 0.18em;
-            color: var(--text-primary);
+            line-height: 1.35;
+        }
+        .toc-author {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 3px;
+            letter-spacing: 0.04em;
+        }
+        .toc-item:hover .toc-title { color: var(--accent); }
+        .toc-empty {
+            padding: 14px 0;
+            font-size: 0.8rem;
+            color: var(--muted);
+            border-bottom: 1px solid var(--hair);
+            font-style: italic;
         }
 
-        /* Search */
+        /* ---- Category pages ---- */
+        .section-header {
+            padding-top: 32px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--rule);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .section-header .folio-label { margin-bottom: 10px; }
+        .section-header-title {
+            font-family: var(--serif);
+            font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        .section-count {
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            padding-bottom: 6px;
+            white-space: nowrap;
+        }
+
+        .idx-row {
+            display: grid;
+            grid-template-columns: 3.2rem 1fr auto;
+            align-items: baseline;
+            gap: 0 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--hair);
+            cursor: pointer;
+        }
+        .idx-num {
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+        }
+        .idx-title {
+            font-family: var(--serif);
+            font-size: 1.18rem;
+            font-weight: 500;
+            line-height: 1.4;
+            min-width: 0;
+        }
+        .idx-author {
+            font-size: 0.82rem;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            text-align: right;
+        }
+        .idx-row:hover .idx-title { color: var(--accent); }
+        .idx-row:hover { color: inherit; }
+
+        .no-result {
+            padding: 18px 0;
+            font-size: 0.85rem;
+            color: var(--muted);
+            border-bottom: 1px solid var(--hair);
+            font-style: italic;
+        }
+
+        /* ---- Search (quiet) ---- */
         .search-container {
             display: none;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 44px;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--hair);
         }
         .search-container.active { display: flex; }
-
         .search-select,
         .search-input {
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-primary);
+            border: none;
+            border-bottom: 1px solid var(--hair);
+            background: transparent;
+            color: var(--ink);
             font-family: inherit;
-            font-size: 0.84rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            padding: 6px 2px;
             outline: none;
-            border-radius: var(--radius);
-            transition: border-color var(--transition), box-shadow var(--transition);
+            border-radius: 0;
+            transition: border-color var(--transition);
         }
+        .search-select { color: var(--muted); cursor: pointer; }
+        .search-select option { background: var(--paper); color: var(--ink); }
         .search-select:focus,
-        .search-input:focus {
-            border-color: var(--sigyeol-green);
-            box-shadow: 0 0 0 3px var(--sigyeol-green-soft);
-        }
+        .search-input:focus { border-bottom-color: var(--ink); }
         .search-input-wrapper {
-            position: relative;
             flex: 1;
             display: flex;
             align-items: center;
+            gap: 12px;
+            min-width: 0;
+            max-width: 420px;
         }
-        .search-input {
-            width: 100%;
-            padding-right: 40px;
-        }
+        .search-input { width: 100%; min-width: 0; }
+        .search-input::placeholder { color: var(--muted); opacity: 0.8; }
         .search-btn {
-            position: absolute;
-            right: 12px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color var(--transition);
-        }
-        .search-btn:hover { color: var(--sigyeol-green); }
-
-        /* ========== Grid & Cards ========== */
-        .poetry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 28px;
-        }
-
-        .poetry-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            padding: 36px 28px 28px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-            border-radius: var(--radius);
-            position: relative;
-            overflow: hidden;
-        }
-        .poetry-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 0;
-            background: var(--sigyeol-green);
-            transition: height 0.35s ease;
-        }
-        .poetry-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-            border-color: transparent;
-        }
-        .poetry-card:hover::before {
-            height: 100%;
-        }
-
-        .poem-category {
             font-size: 0.7rem;
-            color: var(--sigyeol-green);
-            margin-bottom: 14px;
-            letter-spacing: 0.12em;
-            font-weight: 500;
-            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            border-bottom: 1px solid var(--muted);
+            padding-bottom: 1px;
+            white-space: nowrap;
         }
-        .poem-title {
-            font-size: 1.18rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            line-height: 1.55;
-            word-break: keep-all;
-            overflow-wrap: break-word;
-            color: var(--text-primary);
-        }
-        .poem-author {
-            font-size: 0.84rem;
-            color: var(--text-secondary);
-            margin-bottom: 28px;
-            line-height: 1.45;
-            word-break: keep-all;
-            overflow-wrap: break-word;
-        }
-        .read-more {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-            display: inline-block;
-            letter-spacing: 0.12em;
-            transition: color var(--transition);
-        }
-        .poetry-card:hover .read-more {
-            color: var(--sigyeol-green);
-        }
+        .search-btn:hover { border-bottom-color: var(--accent); }
 
-        /* Pagination */
+        /* ---- Pagination (text) ---- */
         .pagination {
             display: flex;
             justify-content: center;
-            gap: 5px;
-            margin-top: 56px;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+            margin-top: 28px;
         }
+        .pagination:empty { display: none; }
         .page-btn {
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            min-width: 38px;
-            height: 38px;
-            padding: 0 8px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.84rem;
-            cursor: pointer;
+            background: none;
+            border: none;
+            border-bottom: 1px solid transparent;
+            color: var(--muted);
             font-family: inherit;
-            border-radius: var(--radius);
-            transition: all 0.2s ease;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            padding: 2px 2px 1px;
+            cursor: pointer;
+            transition: color var(--transition);
         }
-        .page-btn:hover:not(:disabled):not(.active) {
-            border-color: var(--sigyeol-green);
-            color: var(--sigyeol-green);
-        }
-        .page-btn.active {
-            background: var(--text-primary);
-            color: var(--bg-main);
-            border-color: var(--text-primary);
-            font-weight: 600;
-        }
-        .page-btn:disabled {
-            opacity: 0.28;
-            cursor: default;
-        }
+        .page-btn:hover:not(:disabled):not(.active) { color: var(--accent); }
+        .page-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+        .page-btn:disabled { opacity: 0.3; cursor: default; }
 
-        .no-result {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 64px 0;
-            width: 100%;
-            grid-column: 1 / -1;
-            font-size: 0.92rem;
-            letter-spacing: 0.04em;
-        }
-
-        /* ========== Poem Detail ========== */
+        /* ========== Reading view ========== */
         .poem-detail-container {
-            max-width: 640px;
+            max-width: 660px;
             margin: 0 auto;
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            padding: 64px 48px 56px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-soft);
+            padding: 40px 0 8px;
         }
         .poem-detail-category {
-            font-size: 0.72rem;
-            color: var(--sigyeol-green);
-            letter-spacing: 0.2em;
-            text-align: center;
-            margin-bottom: 18px;
-            font-weight: 500;
+            font-size: 0.64rem;
+            letter-spacing: 0.22em;
+            color: var(--accent);
+            margin-bottom: 14px;
             text-transform: uppercase;
         }
         .poem-detail-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 12px;
-            word-break: keep-all;
-            line-height: 1.45;
-            letter-spacing: -0.01em;
+            font-family: var(--serif);
+            font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
         }
         .poem-detail-author {
-            font-size: 0.92rem;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 48px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid var(--border-color);
-            word-break: keep-all;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 36px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--hair);
         }
         .poem-detail-content {
-            font-size: 1.02rem;
-            line-height: 2.35;
+            font-family: var(--serif);
+            font-size: 1.06rem;
+            line-height: 1.9;
             white-space: pre-line;
-            margin-bottom: 56px;
-            padding: 0 12px;
-            text-indent: 0.8em;
-            color: var(--text-primary);
-            font-weight: 400;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            color: var(--ink);
+            margin-bottom: 44px;
         }
-        .poem-detail-content p,
-        .poem-detail-content div {
-            text-indent: 0.8em;
-        }
+        .poem-detail-content b, .poem-detail-content strong { font-weight: 700; }
+        .poem-detail-content a { border-bottom: 1px solid var(--hair); }
+        .poem-detail-content img { max-width: 100%; height: auto; }
 
         .detail-action-btns {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 12px;
+            gap: 28px;
             flex-wrap: wrap;
+            padding-top: 14px;
+            border-top: 1px solid var(--rule);
         }
         .detail-btn {
-            display: inline-block;
-            padding: 11px 26px;
-            border: 1px solid var(--border-color);
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            background: transparent;
-            transition: all 0.25s ease;
+            background: none;
+            border: none;
+            border-bottom: 1px solid var(--rule);
+            padding: 0 0 3px;
             font-family: inherit;
-            border-radius: var(--radius);
-            letter-spacing: 0.04em;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            color: var(--ink);
+            cursor: pointer;
+            transition: color var(--transition), border-color var(--transition);
         }
-        .detail-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--text-primary);
-            background: var(--bg-elevated);
-        }
+        .detail-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
         /* ========== Footer ========== */
-        footer {
-            margin-top: 100px;
-            padding: 48px 24px 40px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            background: var(--bg-card);
-            transition: background-color var(--transition), border-color var(--transition);
+        footer.run-foot {
+            margin-top: 56px;
+            padding-top: 10px;
+            border-top: 1px solid var(--rule);
+            transition: border-color var(--transition);
         }
+        .run-foot-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            font-size: 0.64rem;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+        .run-foot-row > :last-child { text-align: right; }
         .instagram-icon {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            color: var(--text-muted);
-            transition: color var(--transition), transform 0.2s;
+            width: 16px;
+            height: 16px;
+            color: var(--muted);
+            transition: color var(--transition);
         }
-        .instagram-icon:hover {
-            color: var(--sigyeol-green);
-            transform: scale(1.1);
-        }
-        .instagram-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: currentColor;
-        }
+        .instagram-icon:hover { color: var(--accent); }
+        .instagram-icon svg { width: 100%; height: 100%; fill: currentColor; display: block; }
         .copyright {
-            font-size: 0.72rem;
-            color: var(--text-muted);
+            font-size: 0.62rem;
+            color: var(--muted);
             letter-spacing: 0.08em;
-            margin-top: 16px;
+            margin-top: 14px;
+            text-align: center;
         }
 
         /* ========== Mobile ========== */
+        @media (max-width: 780px) {
+            .page { padding: 12px 16px 44px; }
+            .run-head { grid-template-columns: 1fr auto; }
+            .run-head .rh-mid { display: none; }
+            .mast {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                text-align: center;
+                justify-items: center;
+            }
+            .mast-aside { display: none; }
+            nav.mast-nav { width: 100%; padding-bottom: 4px; }
+            nav.mast-nav ul { justify-content: center; gap: 8px 12px; }
+            nav.mast-nav a { font-size: 0.74rem; }
+            .spread {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                padding-top: 24px;
+            }
+            .lead {
+                border-right: none;
+                padding-right: 0;
+                padding-bottom: 28px;
+                border-bottom: 1px solid var(--rule);
+            }
+            .lead-title { font-size: 1.75rem; }
+            .section-header { padding-top: 24px; }
+            .idx-row {
+                grid-template-columns: 2.4rem 1fr;
+                gap: 2px 12px;
+                padding: 14px 0;
+            }
+            .idx-author { grid-column: 2; text-align: left; }
+            .idx-title { font-size: 1.08rem; }
+            .search-container { gap: 10px; }
+            .poem-detail-container { padding-top: 28px; }
+            .poem-detail-title { font-size: 1.75rem; }
+            .poem-detail-content { font-size: 1rem; line-height: 1.9; }
+            footer.run-foot { margin-top: 44px; }
+        }
         @media (max-width: 768px) {
-            header { padding: 36px 16px 28px; }
-            .header-controls { top: 16px; right: 12px; gap: 2px; }
-            .header-btn { width: 36px; height: 36px; font-size: 0.95rem; }
             .title-char-si { font-size: 2.15rem; }
             .title-char-gyeol { font-size: 2.3rem; }
-            nav { margin-top: 22px; }
-            nav ul { gap: 18px; }
-            nav a { font-size: 0.8rem; }
-            main { margin: 32px auto 48px; padding: 0 14px; }
-            .search-container { margin-bottom: 28px; }
-            .poetry-grid {
-                gap: 16px;
-                grid-template-columns: 1fr;
-            }
-            .poetry-card { padding: 28px 22px 24px; }
-            .poem-detail-container {
-                padding: 40px 20px 36px;
-                border: none;
-                box-shadow: none;
-                background: transparent;
-            }
-            .poem-detail-title { font-size: 1.45rem; }
-            .poem-detail-content {
-                padding: 0;
-                margin-bottom: 40px;
-                font-size: 0.98rem;
-                line-height: 2.25;
-            }
-            .poem-detail-author {
-                margin-bottom: 32px;
-                padding-bottom: 22px;
-            }
-            .section-header-title { font-size: 1.2rem; letter-spacing: 0.14em; }
-            footer { margin-top: 64px; padding: 36px 16px 32px; }
         }
-
         @media (max-width: 400px) {
-            nav ul { gap: 12px; }
             .title-char-si { font-size: 1.95rem; }
             .title-char-gyeol { font-size: 2.1rem; }
+            .run-head .rh-right { gap: 10px; }
         }
     </style>
 </head>
 <body>
+<div class="page">
 
-    <header>
-        <div class="header-controls">
-            <button class="header-btn" onclick="openRandomPoem()" title="랜덤 글 보기" aria-label="랜덤 글 보기"><i class="fas fa-dice"></i></button>
-            <button class="header-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    <div class="run-head">
+        <span class="rh-left">시결 · Poetry Webzine</span>
+        <span class="rh-mid" id="run-head-mid">Contents</span>
+        <span class="rh-right">
+            <button class="text-btn random-link" onclick="openRandomPoem()" title="무작위 한 편 읽기">무작위 한 편</button>
+            <button class="text-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><span class="t-dark">어둡게</span><span class="t-light">밝게</span></button>
+        </span>
+    </div>
+
+    <header class="mast">
+        <div class="logo-lockup">
+            <div class="site-title-wrapper" onclick="navigateToSection('main')">
+                <span class="title-char-si">시</span>
+                <span class="title-char-gyeol">결</span>
+            </div>
+            <div class="site-subtitle">POETRY WEBZINE</div>
         </div>
-
-        <div class="site-title-wrapper" onclick="navigateToSection('main')">
-            <span class="title-char-si">시</span>
-            <span class="title-char-gyeol">결</span>
+        <div class="mast-aside">
+            신작시 · 주목한 시<br>
+            신인상 · 공지
         </div>
-        <div class="site-subtitle">POETRY WEBZINE</div>
-
-        <nav>
+        <nav class="mast-nav" aria-label="분류">
             <ul>
                 <li><a onclick="navigateToSection('new-poems')" id="nav-new-poems">신작시</a></li>
                 <li><a onclick="navigateToSection('featured-poems')" id="nav-featured-poems">주목한 시</a></li>
@@ -568,47 +636,70 @@
 
     <main>
         <div id="search-container" class="search-container">
-            <select id="search-type" class="search-select">
+            <select id="search-type" class="search-select" aria-label="검색 범위">
                 <option value="all">전체검색</option>
                 <option value="title">제목</option>
                 <option value="author">작가명</option>
                 <option value="content">본문</option>
             </select>
             <div class="search-input-wrapper">
-                <input type="text" id="search-keyword" class="search-input" placeholder="검색어를 입력하세요..." onkeyup="if(event.key==='Enter') handleSearch()">
-                <button class="search-btn" onclick="handleSearch()"><i class="fas fa-search"></i></button>
+                <input type="text" id="search-keyword" class="search-input" placeholder="검색어" aria-label="검색어" onkeyup="if(event.key==='Enter') handleSearch()">
+                <button class="text-btn search-btn" onclick="handleSearch()">검색</button>
             </div>
         </div>
 
-        <!-- Sections -->
-        <section id="section-main" class="page-section active"><div id="grid-main" class="poetry-grid"></div><div id="pagination-main" class="pagination"></div></section>
-        <section id="section-new-poems" class="page-section"><div class="section-header"><h1 class="section-header-title">신작시</h1></div><div id="grid-new-poems" class="poetry-grid"></div><div id="pagination-new-poems" class="pagination"></div></section>
-        <section id="section-featured-poems" class="page-section"><div class="section-header"><h1 class="section-header-title">주목한 시</h1></div><div id="grid-featured-poems" class="poetry-grid"></div><div id="pagination-featured-poems" class="pagination"></div></section>
-        <section id="section-rookie-award" class="page-section"><div class="section-header"><h1 class="section-header-title">신인상</h1></div><div id="grid-rookie-award" class="poetry-grid"></div><div id="pagination-rookie-award" class="pagination"></div></section>
-        <section id="section-notice" class="page-section"><div class="section-header"><h1 class="section-header-title">공지사항</h1></div><div id="grid-notice" class="poetry-grid"></div><div id="pagination-notice" class="pagination"></div></section>
+        <!-- Home: folio spread -->
+        <section id="section-main" class="page-section active">
+            <div class="spread">
+                <article class="lead" id="featured">
+                    <div class="folio-label" id="featured-label">Featured</div>
+                    <h1 class="lead-title"><a id="featured-title" href="./"></a></h1>
+                    <div class="lead-author" id="featured-author"></div>
+                    <div class="lead-body" id="featured-body"></div>
+                    <a class="lead-link" id="featured-link" href="./">이어서 읽기</a>
+                </article>
+                <aside class="side-col">
+                    <div class="toc-h">Index</div>
+                    <div id="grid-main" class="poetry-grid toc-list"></div>
+                    <div id="pagination-main" class="pagination"></div>
+                </aside>
+            </div>
+        </section>
 
-        <!-- Detail View -->
+        <!-- Category pages -->
+        <section id="section-new-poems" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">신작시</h1></div><div class="section-count" id="count-new-poems"></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
+        <section id="section-featured-poems" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">주목한 시</h1></div><div class="section-count" id="count-featured-poems"></div></div><div id="grid-featured-poems" class="poetry-grid idx-list"></div><div id="pagination-featured-poems" class="pagination"></div></section>
+        <section id="section-rookie-award" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">신인상</h1></div><div class="section-count" id="count-rookie-award"></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
+        <section id="section-notice" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">공지사항</h1></div><div class="section-count" id="count-notice"></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
+
+        <!-- Reading view -->
         <section id="section-poem-detail" class="page-section">
-            <div class="poem-detail-container">
+            <article class="poem-detail-container">
                 <div id="detail-category" class="poem-detail-category">카테고리</div>
                 <h1 id="detail-title" class="poem-detail-title">제목</h1>
                 <div id="detail-author" class="poem-detail-author">작가</div>
                 <div id="detail-content" class="poem-detail-content">본문</div>
-                
+
                 <div class="detail-action-btns">
                     <button class="detail-btn" onclick="goBack()">돌아가기</button>
                     <button id="copy-link-btn" class="detail-btn" onclick="copyCurrentLink()">링크 복사</button>
                 </div>
-            </div>
+            </article>
         </section>
     </main>
 
-    <footer>
-        <a href="https://www.instagram.com/sigyeol/" target="_blank" rel="noopener noreferrer" class="instagram-icon">
+    <footer class="run-foot">
+        <div class="run-foot-row">
+            <span>Sigyeol</span>
+            <a href="https://www.instagram.com/sigyeol/" target="_blank" rel="noopener noreferrer" class="instagram-icon" aria-label="시결 인스타그램">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
+            </a>
+            <span>sigyeol.com</span>
+        </div>
         <div class="copyright">Copyright 2026 ⓒ웹진《시결》. Rights reserved</div>
     </footer>
+
+</div>
 
     <script src="poems-index.js"></script>
     <script>
@@ -623,6 +714,11 @@
 
         const ITEMS_PER_PAGE = 12, PAGES_PER_BLOCK = 10;
         let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1 };
+
+        const CATEGORY_ORDER = ['신작시', '주목한 시', '신인상', '공지사항'];
+        const SECTION_IDS = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
+        const FEATURED_CATEGORY = '주목한 시';
+        const EXCERPT_LINES = 6;
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -714,63 +810,210 @@
             renderData();
         }
 
+        // ---------- small DOM helpers (text only, never raw HTML from data) ----------
+        function el(tag, className, text) {
+            const n = document.createElement(tag);
+            if (className) n.className = className;
+            if (text != null) n.textContent = text;
+            return n;
+        }
+        function poemHref(id) { return '?id=' + encodeURIComponent(id); }
+        function bindOpen(node, id) {
+            node.href = poemHref(id);
+            node.onclick = e => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // allow new tab
+                e.preventDefault();
+                navigateToPoemDetail(String(id));
+            };
+        }
+        function emptyLine(cat) {
+            return cat === '공지사항' ? '공지사항 — 게시 예정' : cat + ' — 수록 예정';
+        }
+
+        // Home index row: category label / title / poet
+        function makeTocItem(item) {
+            const a = el('a', 'toc-item');
+            a.appendChild(el('div', 'toc-cat', item.category));
+            a.appendChild(el('div', 'toc-title', item.title));
+            a.appendChild(el('div', 'toc-author', item.author));
+            bindOpen(a, item.id);
+            return a;
+        }
+        // Category page row: number / title / poet
+        function makeIdxRow(item, num) {
+            const a = el('a', 'idx-row');
+            a.appendChild(el('span', 'idx-num', String(num).padStart(2, '0')));
+            a.appendChild(el('span', 'idx-title', item.title));
+            a.appendChild(el('span', 'idx-author', item.author));
+            bindOpen(a, item.id);
+            return a;
+        }
+
+        // ---------- Featured excerpt ----------
+        // Parse CMS HTML in an inert document (no scripts run), flatten to visual lines.
+        function htmlToLines(html) {
+            const doc = new DOMParser().parseFromString('<body>' + (html || '') + '</body>', 'text/html');
+            const lines = [];
+            let buf = '';
+            const BLOCK = /^(DIV|P|LI|H[1-6]|BLOCKQUOTE|PRE|SECTION|ARTICLE|UL|OL|TR)$/;
+            const flush = () => { lines.push(buf); buf = ''; };
+            (function walk(node) {
+                node.childNodes.forEach(ch => {
+                    if (ch.nodeType === 3) { buf += ch.nodeValue.replace(/\n/g, ' '); return; }
+                    if (ch.nodeType !== 1) return;
+                    const tag = ch.tagName;
+                    if (tag === 'BR') { flush(); return; }
+                    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEMPLATE') return;
+                    const block = BLOCK.test(tag);
+                    if (block && buf.trim()) flush();
+                    else if (block) buf = '';
+                    walk(ch);
+                    if (block && buf !== '') flush();
+                });
+            })(doc.body);
+            if (buf !== '') flush();
+            return lines.map(l => l.replace(/[\u00a0\u200b]/g, ' ').replace(/\s+/g, ' ').trim());
+        }
+        function excerptLines(html, max) {
+            const out = [];
+            let count = 0, pendingBreak = false;
+            for (const line of htmlToLines(html)) {
+                if (!line) { if (out.length) pendingBreak = true; continue; }
+                if (count >= max) break;
+                if (pendingBreak) { out.push(''); pendingBreak = false; }
+                out.push(line);
+                count++;
+            }
+            return out;
+        }
+        function renderExcerpt(container, html) {
+            container.textContent = '';
+            excerptLines(html, EXCERPT_LINES).forEach(line => {
+                container.appendChild(line ? el('p', null, line) : el('div', 'sp'));
+            });
+        }
+
+        function pickFeatured(sorted) {
+            return sorted.find(p => p.category === FEATURED_CATEGORY)
+                || sorted.find(p => p.category !== '공지사항')
+                || null;
+        }
+
+        let featuredId = null;
+        function renderFeatured(sorted) {
+            const lead = document.getElementById('featured');
+            const item = pickFeatured(sorted);
+            const label = document.getElementById('featured-label');
+            const titleEl = document.getElementById('featured-title');
+            const authorEl = document.getElementById('featured-author');
+            const body = document.getElementById('featured-body');
+            const link = document.getElementById('featured-link');
+            if (!item) {
+                featuredId = null;
+                label.textContent = 'Featured';
+                titleEl.textContent = '';
+                authorEl.textContent = '';
+                link.style.display = 'none';
+                body.textContent = '';
+                body.appendChild(el('div', 'lead-empty', '수록 예정'));
+                return;
+            }
+            const changed = featuredId !== item.id;
+            featuredId = item.id;
+            label.textContent = 'Featured · ' + item.category;
+            titleEl.textContent = item.title;
+            authorEl.textContent = item.author;
+            link.style.display = '';
+            bindOpen(titleEl, item.id);
+            bindOpen(link, item.id);
+            if (item.content != null) { renderExcerpt(body, item.content); return; }
+            if (changed) body.textContent = '';
+            ensurePoemBody(item.id).then(loaded => {
+                if (featuredId !== item.id || !loaded) return;
+                renderExcerpt(body, loaded.content || '');
+            }).catch(() => { /* title/poet stay; 이어서 읽기 still opens it */ });
+        }
+
         function renderData() {
             const type = document.getElementById('search-type').value;
             const kw = document.getElementById('search-keyword').value.trim().toLowerCase();
-            let filtered = getSortedPoems(currentPoems);
+            const sorted = getSortedPoems(currentPoems);
+            let filtered = sorted;
 
             if (kw) {
                 filtered = filtered.filter(p => matchesSearch(p, type, kw));
             }
 
-            const sectionIds = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
-            Object.keys(sectionIds).forEach(cat => {
-                const gridId = 'grid-' + sectionIds[cat];
-                const pageId = 'pagination-' + sectionIds[cat];
+            renderFeatured(sorted);
+
+            Object.keys(SECTION_IDS).forEach(cat => {
+                const gridId = 'grid-' + SECTION_IDS[cat];
+                const pageId = 'pagination-' + SECTION_IDS[cat];
                 
                 const grid = document.getElementById(gridId);
                 const page = document.getElementById(pageId);
                 if (!grid) return;
                 grid.innerHTML = ''; page.innerHTML = '';
 
-                const items = cat === 'main' ? filtered.filter(p => p.isMain) : filtered.filter(p => p.category === cat);
-                if (items.length === 0) { grid.innerHTML = `<div class="no-result">등록된 작품이 없거나 검색 결과가 없습니다.</div>`; return; }
+                // Home index lists every post (search box is not shown on home).
+                const items = cat === 'main' ? sorted : filtered.filter(p => p.category === cat);
+
+                if (cat !== 'main') {
+                    const total = sorted.filter(p => p.category === cat).length;
+                    const countEl = document.getElementById('count-' + SECTION_IDS[cat]);
+                    if (countEl) {
+                        const unit = cat === '공지사항' ? '건' : '편';
+                        countEl.textContent = kw ? (items.length + ' / ' + total + unit) : (total ? total + unit : '');
+                    }
+                }
+
+                if (items.length === 0) {
+                    if (cat === 'main') {
+                        CATEGORY_ORDER.forEach(c => grid.appendChild(el('div', 'toc-empty', emptyLine(c))));
+                    } else if (kw) {
+                        grid.appendChild(el('div', 'no-result', '검색 결과가 없습니다.'));
+                    } else {
+                        grid.appendChild(el('div', 'no-result', emptyLine(cat)));
+                    }
+                    return;
+                }
 
                 const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
                 if (pageStates[cat] > totalPages) pageStates[cat] = totalPages;
                 const curPage = pageStates[cat] || 1;
-                const pagedItems = items.slice((curPage - 1) * ITEMS_PER_PAGE, curPage * ITEMS_PER_PAGE);
+                const offset = (curPage - 1) * ITEMS_PER_PAGE;
+                const pagedItems = items.slice(offset, curPage * ITEMS_PER_PAGE);
 
-                pagedItems.forEach(item => {
-                    const card = document.createElement('article');
-                    card.className = 'poetry-card';
-                    card.innerHTML = `
-                        <div onclick="navigateToPoemDetail('${item.id}')">
-                            <div class="poem-category">${item.category}</div>
-                            <h2 class="poem-title">${item.title}</h2>
-                            <p class="poem-author">${item.author}</p>
-                            <span class="read-more">READ MORE →</span>
-                        </div>`;
-                    grid.appendChild(card);
+                pagedItems.forEach((item, i) => {
+                    grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item, offset + i + 1));
                 });
+
+                // Home: quiet line for categories that have nothing yet (last page only).
+                if (cat === 'main' && curPage === totalPages) {
+                    CATEGORY_ORDER.forEach(c => {
+                        if (!sorted.some(p => p.category === c)) grid.appendChild(el('div', 'toc-empty', emptyLine(c)));
+                    });
+                }
 
                 if (totalPages > 1 && page) {
                     const start = (Math.ceil(curPage / PAGES_PER_BLOCK) - 1) * PAGES_PER_BLOCK + 1;
                     const end = Math.min(start + PAGES_PER_BLOCK - 1, totalPages);
 
-                    const createBtn = (html, disabled, onClick) => {
+                    const createBtn = (label, disabled, onClick, aria) => {
                         const b = document.createElement('button');
-                        b.className = 'page-btn'; b.innerHTML = html; b.disabled = disabled;
+                        b.className = 'page-btn'; b.textContent = label; b.disabled = disabled;
+                        if (aria) b.setAttribute('aria-label', aria);
                         b.onclick = onClick; return b;
                     };
+                    const go = n => { pageStates[cat] = n; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); };
 
-                    page.appendChild(createBtn('<i class="fas fa-chevron-left"></i>', curPage === 1, () => { pageStates[cat] = curPage - 1; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); }));
+                    page.appendChild(createBtn('이전', curPage === 1, () => go(curPage - 1), '이전 페이지'));
                     for (let i = start; i <= end; i++) {
-                        const btn = createBtn(i, false, () => { pageStates[cat] = i; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); });
+                        const btn = createBtn(String(i), false, () => go(i));
                         if (i === curPage) btn.classList.add('active');
                         page.appendChild(btn);
                     }
-                    page.appendChild(createBtn('<i class="fas fa-chevron-right"></i>', curPage === totalPages, () => { pageStates[cat] = curPage + 1; renderData(); window.scrollTo({ top: grid.offsetTop - 100, behavior: 'smooth' }); }));
+                    page.appendChild(createBtn('다음', curPage === totalPages, () => go(curPage + 1), '다음 페이지'));
                 }
             });
         }
@@ -802,6 +1045,11 @@
             }
         });
 
+        function setRunHead(text) {
+            const mid = document.getElementById('run-head-mid');
+            if (mid) mid.textContent = text;
+        }
+
         function showSection(secId) {
             if (!document.getElementById('section-' + secId)) secId = 'main';
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
@@ -810,7 +1058,17 @@
             if (target) target.classList.add('active');
             if (nav) nav.classList.add('active');
 
-            document.getElementById('search-container').classList.toggle('active', secId !== 'main' && secId !== 'poem-detail');
+            const search = document.getElementById('search-container');
+            const showSearch = secId !== 'main' && secId !== 'poem-detail';
+            if (showSearch && target) {
+                const header = target.querySelector('.section-header');
+                if (header && header.nextElementSibling !== search) header.after(search);
+            }
+            search.classList.toggle('active', showSearch);
+
+            if (secId === 'main') setRunHead('Contents');
+            else if (nav) setRunHead(nav.textContent);
+
             if (secId !== 'poem-detail') { currentSection = secId; previousSection = secId; }
             window.scrollTo({ top: 0, behavior: 'smooth' }); renderData();
         }
@@ -832,6 +1090,9 @@
             }
 
             showSection('poem-detail');
+            setRunHead(item.category);
+            const catNav = document.getElementById('nav-' + SECTION_IDS[item.category]);
+            if (catNav) catNav.classList.add('active');
 
             if (item.content == null) {
                 ensurePoemBody(id).then(loaded => {
