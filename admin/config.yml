@@ -3,7 +3,7 @@
 # 대안: 아래 backend를 github로 바꿀 수 있음 (repo: sigyeol2024/sigyeol, branch: main)
 #
 # 카테고리별 컬렉션: 모두 content/poems/ 에 JSON을 두고 category 필드로 필터합니다.
-# /admin 사이드바에 신작시 · 주목한 시 · 신인상 · 공지사항 · 아카이브가 각각 보입니다.
+# /admin 사이드바에 신작시 · 주목한 시 · 신인상 · 공지사항이 각각 보입니다.
 
 backend:
   name: git-gateway
@@ -160,33 +160,6 @@ collections:
         name: category
         widget: hidden
         default: 공지사항
-      - *field_title
-      - *field_author
-      - *field_ismain
-      - *field_content
-
-  - name: poems_archive
-    label: 아카이브
-    label_singular: 글
-    folder: content/poems
-    create: true
-    delete: true
-    slug: "{{id}}"
-    extension: json
-    format: json
-    identifier_field: title
-    summary: "{{order}} · {{title}} — {{author}}"
-    sortable_fields: ["order", "id", "title", "author"]
-    filter:
-      field: category
-      value: 아카이브
-    fields:
-      - *field_id
-      - *field_order
-      - label: 카테고리
-        name: category
-        widget: hidden
-        default: 아카이브
       - *field_title
       - *field_author
       - *field_ismain

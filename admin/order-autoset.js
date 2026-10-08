@@ -12,7 +12,6 @@
     poems_spotlight: true,
     poems_rookie: true,
     poems_notice: true,
-    poems_archive: true,
   };
 
   function parseOrder(v) {

@@ -183,8 +183,6 @@
             width: 100%;
         }
 
-        #nav-item-archive { display: none; }
-
         /* ========== Main ========== */
         main {
             max-width: 1040px;
@@ -548,7 +546,7 @@
 
     <header>
         <div class="header-controls">
-            <button class="header-btn" onclick="handleDiceClick()" title="랜덤 글 보기" aria-label="랜덤 글 보기"><i class="fas fa-dice"></i></button>
+            <button class="header-btn" onclick="openRandomPoem()" title="랜덤 글 보기" aria-label="랜덤 글 보기"><i class="fas fa-dice"></i></button>
             <button class="header-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
         </div>
 
@@ -562,9 +560,8 @@
             <ul>
                 <li><a onclick="navigateToSection('new-poems')" id="nav-new-poems">신작시</a></li>
                 <li><a onclick="navigateToSection('featured-poems')" id="nav-featured-poems">주목한 시</a></li>
-                <li><a onclick="handleRookieAwardClick()" id="nav-rookie-award">신인상</a></li>
+                <li><a onclick="navigateToSection('rookie-award')" id="nav-rookie-award">신인상</a></li>
                 <li><a onclick="navigateToSection('notice')" id="nav-notice">공지사항</a></li>
-                <li id="nav-item-archive"><a onclick="navigateToSection('archive')" id="nav-archive">아카이브</a></li>
             </ul>
         </nav>
     </header>
@@ -589,7 +586,6 @@
         <section id="section-featured-poems" class="page-section"><div class="section-header"><h1 class="section-header-title">주목한 시</h1></div><div id="grid-featured-poems" class="poetry-grid"></div><div id="pagination-featured-poems" class="pagination"></div></section>
         <section id="section-rookie-award" class="page-section"><div class="section-header"><h1 class="section-header-title">신인상</h1></div><div id="grid-rookie-award" class="poetry-grid"></div><div id="pagination-rookie-award" class="pagination"></div></section>
         <section id="section-notice" class="page-section"><div class="section-header"><h1 class="section-header-title">공지사항</h1></div><div id="grid-notice" class="poetry-grid"></div><div id="pagination-notice" class="pagination"></div></section>
-        <section id="section-archive" class="page-section"><div class="section-header"><h1 class="section-header-title">아카이브</h1></div><div id="grid-archive" class="poetry-grid"></div><div id="pagination-archive" class="pagination"></div></section>
 
         <!-- Detail View -->
         <section id="section-poem-detail" class="page-section">
@@ -625,12 +621,8 @@
         let bodySearchReady = false;
         let bodySearchLoading = null;
 
-        let rookieClickCount = 0;
-        let isArchiveReady = false;
-        let archiveTimer = null;
-
         const ITEMS_PER_PAGE = 12, PAGES_PER_BLOCK = 10;
-        let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1, '아카이브': 1 };
+        let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1 };
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -638,29 +630,8 @@
         }
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
-        function handleRookieAwardClick() {
-            if (++rookieClickCount >= 3) {
-                rookieClickCount = 0;
-                isArchiveReady = true;
-                clearTimeout(archiveTimer);
-                archiveTimer = setTimeout(() => { isArchiveReady = false; }, 8000);
-            } else {
-                navigateToSection('rookie-award');
-            }
-        }
-
-        function handleDiceClick() {
-            if (isArchiveReady) {
-                isArchiveReady = false;
-                clearTimeout(archiveTimer);
-                navigateToSection('archive');
-            } else {
-                openRandomPoem();
-            }
-        }
-
         function openRandomPoem() {
-            const poemList = currentPoems.filter(p => p.category !== '공지사항' && p.category !== '아카이브');
+            const poemList = currentPoems.filter(p => p.category !== '공지사항');
             if (poemList.length === 0) return alert('읽을 수 있는 작품이 아직 없습니다.');
             const randomIndex = Math.floor(Math.random() * poemList.length);
             navigateToPoemDetail(poemList[randomIndex].id);
@@ -752,10 +723,10 @@
                 filtered = filtered.filter(p => matchesSearch(p, type, kw));
             }
 
-            const categories = ['main', '신작시', '주목한 시', '신인상', '공지사항', '아카이브'];
-            categories.forEach(cat => {
-                const gridId = cat === 'main' ? 'grid-main' : cat === '신작시' ? 'grid-new-poems' : cat === '주목한 시' ? 'grid-featured-poems' : cat === '신인상' ? 'grid-rookie-award' : cat === '공지사항' ? 'grid-notice' : 'grid-archive';
-                const pageId = cat === 'main' ? 'pagination-main' : cat === '신작시' ? 'pagination-new-poems' : cat === '주목한 시' ? 'pagination-featured-poems' : cat === '신인상' ? 'pagination-rookie-award' : cat === '공지사항' ? 'pagination-notice' : 'pagination-archive';
+            const sectionIds = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
+            Object.keys(sectionIds).forEach(cat => {
+                const gridId = 'grid-' + sectionIds[cat];
+                const pageId = 'pagination-' + sectionIds[cat];
                 
                 const grid = document.getElementById(gridId);
                 const page = document.getElementById(pageId);
@@ -832,6 +803,7 @@
         });
 
         function showSection(secId) {
+            if (!document.getElementById('section-' + secId)) secId = 'main';
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
             const target = document.getElementById('section-' + secId), nav = document.getElementById('nav-' + secId);
@@ -856,7 +828,7 @@
 
             const copyBtn = document.getElementById('copy-link-btn');
             if (copyBtn) {
-                copyBtn.style.display = (item.category === '아카이브') ? 'none' : 'inline-block';
+                copyBtn.style.display = 'inline-block';
             }
 
             showSection('poem-detail');
