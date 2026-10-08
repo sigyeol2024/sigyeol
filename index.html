@@ -154,19 +154,12 @@
             to { opacity: 1; }
         }
 
-        .folio-label {
-            font-size: 0.64rem;
-            letter-spacing: 0.22em;
-            color: var(--accent);
-            margin-bottom: 14px;
-            text-transform: uppercase;
-        }
-
         /* ---- Home spread ---- */
         .spread {
             display: grid;
             grid-template-columns: 1.4fr 0.85fr;
             gap: 0 36px;
+            align-items: start;
             padding-top: 32px;
         }
         .lead {
@@ -190,32 +183,25 @@
             padding-bottom: 16px;
             border-bottom: 1px solid var(--hair);
         }
-        .lead-body {
-            font-family: var(--serif);
-            font-size: 1.08rem;
-            line-height: 1.95;
-            min-height: 1.95em;
-        }
-        .lead-body p { margin: 0; text-indent: 0.8em; }
-        .lead-body .sp { height: 0.9em; }
-        .lead-link {
-            display: inline-block;
-            margin-top: 28px;
-            font-size: 0.72rem;
-            letter-spacing: 0.14em;
-            border-bottom: 1px solid var(--rule);
-            padding-bottom: 3px;
-            cursor: pointer;
-        }
-        .lead-link:hover { border-bottom-color: var(--accent); }
-        .lead-empty {
             font-size: 0.85rem;
             color: var(--muted);
             font-style: italic;
             padding: 8px 0;
         }
+        /* Left column shows the full text with the reading-view styles (.poem-detail-content). */
+        .lead-body.poem-detail-content { margin-bottom: 0; min-height: 1.9em; }
 
         .side-col { padding-top: 4px; min-width: 0; }
+        @media (min-width: 781px) {
+            /* PC: keep the list in view while a long poem scrolls */
+            .side-col {
+                position: sticky;
+                top: 24px;
+                max-height: calc(100vh - 48px);
+                overflow-y: auto;
+                scrollbar-width: thin;
+            }
+        }
         .toc-item {
             display: block;
             padding: 12px 0;
@@ -257,7 +243,6 @@
             gap: 16px;
             flex-wrap: wrap;
         }
-        .section-header .folio-label { margin-bottom: 10px; }
         .section-header-title {
             font-family: var(--serif);
             font-size: clamp(1.75rem, 3.2vw, 2.4rem);
@@ -456,24 +441,17 @@
         /* ========== Footer ========== */
         footer.run-foot {
             margin-top: 56px;
-            padding-top: 10px;
+            padding-top: 22px;
             border-top: 1px solid var(--rule);
-            transition: border-color var(--transition);
-        }
-        .run-foot-row {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            font-size: 0.64rem;
-            letter-spacing: 0.12em;
-            color: var(--muted);
-            text-transform: uppercase;
+            gap: 12px;
         }
-        .run-foot-row > :last-child { text-align: right; }
         .instagram-icon {
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             color: var(--muted);
             transition: color var(--transition);
         }
@@ -483,7 +461,6 @@
             font-size: 0.62rem;
             color: var(--muted);
             letter-spacing: 0.08em;
-            margin-top: 14px;
             text-align: center;
         }
 
@@ -539,7 +516,7 @@
 
     <header class="mast">
         <div class="logo-lockup">
-            <div class="site-title-wrapper" onclick="navigateToSection('main')">
+            <div class="site-title-wrapper" onclick="reloadHome()">
                 <span class="title-char-si">시</span>
                 <span class="title-char-gyeol">결</span>
             </div>
@@ -557,14 +534,14 @@
 
     <main>
         <div id="search-container" class="search-container">
-            <select id="search-type" class="search-select" aria-label="검색 범위">
+            <select id="search-type" class="search-select" aria-label="검색 범위" autocomplete="off">
                 <option value="all">전체검색</option>
                 <option value="title">제목</option>
                 <option value="author">작가명</option>
                 <option value="content">본문</option>
             </select>
             <div class="search-input-wrapper">
-                <input type="text" id="search-keyword" class="search-input" placeholder="검색어" aria-label="검색어" onkeyup="if(event.key==='Enter') handleSearch()">
+                <input type="text" id="search-keyword" class="search-input" placeholder="검색어" aria-label="검색어" autocomplete="off" onkeyup="if(event.key==='Enter') handleSearch()">
                 <button class="text-btn search-btn" onclick="handleSearch()">검색</button>
             </div>
         </div>
@@ -576,8 +553,7 @@
                     <div class="lead-swap">
                         <h1 class="lead-title"><a id="featured-title" href="./"></a></h1>
                         <div class="lead-author" id="featured-author"></div>
-                        <div class="lead-body" id="featured-body"></div>
-                        <a class="lead-link" id="featured-link" href="./">이어서 읽기</a>
+                        <div class="lead-body poem-detail-content" id="featured-body"></div>
                     </div>
                 </article>
                 <aside class="side-col">
@@ -588,10 +564,10 @@
         </section>
 
         <!-- Category pages -->
-        <section id="section-new-poems" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">신작시</h1></div><div class="section-count" id="count-new-poems"></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
-        <section id="section-featured-poems" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">주목한 시</h1></div><div class="section-count" id="count-featured-poems"></div></div><div id="grid-featured-poems" class="poetry-grid idx-list"></div><div id="pagination-featured-poems" class="pagination"></div></section>
-        <section id="section-rookie-award" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">신인상</h1></div><div class="section-count" id="count-rookie-award"></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
-        <section id="section-notice" class="page-section"><div class="section-header"><div><div class="folio-label">Section</div><h1 class="section-header-title">공지사항</h1></div><div class="section-count" id="count-notice"></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
+        <section id="section-new-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신작시</h1></div><div class="section-count" id="count-new-poems"></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
+        <section id="section-featured-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">주목한 시</h1></div><div class="section-count" id="count-featured-poems"></div></div><div id="grid-featured-poems" class="poetry-grid idx-list"></div><div id="pagination-featured-poems" class="pagination"></div></section>
+        <section id="section-rookie-award" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신인상</h1></div><div class="section-count" id="count-rookie-award"></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
+        <section id="section-notice" class="page-section"><div class="section-header"><div><h1 class="section-header-title">공지사항</h1></div><div class="section-count" id="count-notice"></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
 
         <!-- Reading view -->
         <section id="section-poem-detail" class="page-section">
@@ -610,13 +586,9 @@
     </main>
 
     <footer class="run-foot">
-        <div class="run-foot-row">
-            <span>Sigyeol</span>
             <a href="https://www.instagram.com/sigyeol/" target="_blank" rel="noopener noreferrer" class="instagram-icon" aria-label="시결 인스타그램">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
-            <span>sigyeol.com</span>
-        </div>
         <div class="copyright">Copyright 2026 ⓒ웹진《시결》. Rights reserved</div>
     </footer>
 
@@ -638,7 +610,6 @@
 
         const SECTION_IDS = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
         const FEATURED_POOL = ['신작시', '주목한 시', '신인상']; // never 공지사항
-        const EXCERPT_LINES = 6;
 
         function copyCurrentLink() {
             navigator.clipboard.writeText(window.location.href).then(() => {
@@ -688,6 +659,18 @@
             if (ao !== bo) return ao - bo; // lower order = first
             return Number(b.id) - Number(a.id);
         });
+
+        // mainOrder ascending first; posts without mainOrder follow in the normal display order (stable sort).
+        const parseMainOrder = v => (v == null || v === '' || !Number.isFinite(parseFloat(v))) ? null : parseFloat(v);
+        function getMainListPoems(sorted) {
+            return sorted.filter(p => p.isMain).sort((a, b) => {
+                const am = parseMainOrder(a.mainOrder), bm = parseMainOrder(b.mainOrder);
+                if (am == null && bm == null) return 0;
+                if (am == null) return 1;
+                if (bm == null) return -1;
+                return am - bm;
+            });
+        }
 
         function matchesSearch(p, type, kw) {
             const t = (p.title || '').toLowerCase();
@@ -759,51 +742,8 @@
             return a;
         }
 
-        // ---------- Featured excerpt ----------
-        // Parse CMS HTML in an inert document (no scripts run), flatten to visual lines.
-        function htmlToLines(html) {
-            const doc = new DOMParser().parseFromString('<body>' + (html || '') + '</body>', 'text/html');
-            const lines = [];
-            let buf = '';
-            const BLOCK = /^(DIV|P|LI|H[1-6]|BLOCKQUOTE|PRE|SECTION|ARTICLE|UL|OL|TR)$/;
-            const flush = () => { lines.push(buf); buf = ''; };
-            (function walk(node) {
-                node.childNodes.forEach(ch => {
-                    if (ch.nodeType === 3) { buf += ch.nodeValue.replace(/\n/g, ' '); return; }
-                    if (ch.nodeType !== 1) return;
-                    const tag = ch.tagName;
-                    if (tag === 'BR') { flush(); return; }
-                    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEMPLATE') return;
-                    const block = BLOCK.test(tag);
-                    if (block && buf.trim()) flush();
-                    else if (block) buf = '';
-                    walk(ch);
-                    if (block && buf !== '') flush();
-                });
-            })(doc.body);
-            if (buf !== '') flush();
-            return lines.map(l => l.replace(/[\u00a0\u200b]/g, ' ').replace(/\s+/g, ' ').trim());
-        }
-        function excerptLines(html, max) {
-            const out = [];
-            let count = 0, pendingBreak = false;
-            for (const line of htmlToLines(html)) {
-                if (!line) { if (out.length) pendingBreak = true; continue; }
-                if (count >= max) break;
-                if (pendingBreak) { out.push(''); pendingBreak = false; }
-                out.push(line);
-                count++;
-            }
-            return out;
-        }
-        function renderExcerpt(container, html) {
-            container.textContent = '';
-            excerptLines(html, EXCERPT_LINES).forEach(line => {
-                container.appendChild(line ? el('p', null, line) : el('div', 'sp'));
-            });
-        }
-
         // Featured poem: picked at random once per page load from 신작시 / 주목한 시 / 신인상.
+        // The left column shows the full body (same HTML + styles as the reading view).
         function pickRandomFeatured() {
             const pool = currentPoems.filter(p => FEATURED_POOL.includes(p.category));
             if (pool.length === 0) return null;
@@ -819,13 +759,11 @@
             const titleEl = document.getElementById('featured-title');
             const authorEl = document.getElementById('featured-author');
             const body = document.getElementById('featured-body');
-            const link = document.getElementById('featured-link');
             const token = ++featuredToken;
             if (!item) {
                 featuredId = null;
                 titleEl.textContent = '';
                 authorEl.textContent = '';
-                link.style.display = 'none';
                 body.textContent = '';
                 return;
             }
@@ -834,21 +772,25 @@
             featuredItem = item;
             titleEl.textContent = item.title;
             authorEl.textContent = item.author;
-            link.style.display = '';
             bindOpen(titleEl, item.id);
-            bindOpen(link, item.id);
             document.querySelectorAll('#grid-main .toc-item').forEach(a => a.classList.toggle('current', a.dataset.id == item.id));
             if (changed && animate) {
                 lead.classList.remove('swap');
                 void lead.offsetWidth; // restart the short fade
                 lead.classList.add('swap');
+                // If the reader had scrolled into a long poem, bring the new poem's start into view.
+                const top = lead.getBoundingClientRect().top;
+                if (top < 0) window.scrollTo({ top: window.scrollY + top - 16 });
             }
-            if (item.content != null) { renderExcerpt(body, item.content); return; }
+            if (item.content != null) { body.innerHTML = item.content; return; }
             if (changed) body.textContent = '';
             ensurePoemBody(item.id).then(loaded => {
                 if (token !== featuredToken || !loaded) return; // a newer hover won
-                renderExcerpt(body, loaded.content || '');
-            }).catch(() => { /* title/poet stay; 이어서 읽기 still opens it */ });
+                body.innerHTML = loaded.content || '';
+            }).catch(() => {
+                if (token !== featuredToken) return;
+                body.innerHTML = '<div class="no-result">본문을 불러오지 못했습니다.</div>';
+            });
         }
 
         // PC hover preview: hovering a list row swaps the left poem (mouse + wide screens only).
@@ -857,7 +799,7 @@
         function prefetchListedBodies() {
             if (listPrefetched) return;
             listPrefetched = true;
-            currentPoems.filter(p => p.isMain).forEach(p => ensurePoemBody(p.id).catch(() => null));
+            getMainListPoems(currentPoems).slice(0, ITEMS_PER_PAGE).forEach(p => ensurePoemBody(p.id).catch(() => null));
         }
         function onRowHover(item) {
             if (!hoverPreviewMQ.matches) return;
@@ -894,8 +836,8 @@
                 if (!grid) return;
                 grid.innerHTML = ''; page.innerHTML = '';
 
-                // Home list: only posts flagged '메인 페이지 노출' (isMain) in the CMS; not filtered by search.
-                const items = cat === 'main' ? sorted.filter(p => p.isMain) : filtered.filter(p => p.category === cat);
+                // Home list: only posts flagged '메인 페이지 노출' (isMain), ordered by '메인 페이지 노출 순서' (mainOrder).
+                const items = cat === 'main' ? getMainListPoems(sorted) : filtered.filter(p => p.category === cat);
 
                 if (cat !== 'main') {
                     const total = sorted.filter(p => p.category === cat).length;
@@ -977,8 +919,22 @@
             }
         });
 
+        // Search is per visit: any navigation (section change, home, poem open/return, back/forward) clears it.
+        function resetSearch() {
+            const kwEl = document.getElementById('search-keyword');
+            const typeEl = document.getElementById('search-type');
+            if (kwEl) kwEl.value = '';
+            if (typeEl) typeEl.value = 'all';
+        }
+
+        // Logo: real reload of the main page so the random poem re-rolls.
+        function reloadHome() {
+            window.location.href = '/';
+        }
+
         function showSection(secId) {
             if (!document.getElementById('section-' + secId)) secId = 'main';
+            resetSearch();
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
             const target = document.getElementById('section-' + secId), nav = document.getElementById('nav-' + secId);
@@ -1043,6 +999,7 @@
         }
 
         function initApp() {
+            resetSearch(); // browsers may restore old form values on reload/back
             const params = new URLSearchParams(window.location.search);
             const poemId = params.get('id');
             if (poemId) {
@@ -1051,6 +1008,8 @@
                 renderData();
             }
         }
+
+        window.addEventListener('pageshow', e => { if (e.persisted) { resetSearch(); renderData(); } });
 
         showFeatured(featuredItem, false);
         initApp();

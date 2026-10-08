@@ -50,6 +50,15 @@ x-field-ismain: &field_ismain
   widget: boolean
   default: false
 
+x-field-mainorder: &field_mainorder
+  label: "메인 페이지 노출 순서"
+  name: mainOrder
+  widget: number
+  value_type: float
+  step: 0.1
+  required: false
+  hint: "작을수록 메인 목록 위쪽. 비워 두면 표시 순서를 따름 (값이 있는 글이 먼저, 빈 글은 그 뒤). 1.5처럼 소수 가능."
+
 x-field-content: &field_content
   label: 본문
   name: content
@@ -82,6 +91,7 @@ collections:
       - *field_title
       - *field_author
       - *field_ismain
+      - *field_mainorder
       - *field_content
 
   - name: poems_spotlight
@@ -109,6 +119,7 @@ collections:
       - *field_title
       - *field_author
       - *field_ismain
+      - *field_mainorder
       - *field_content
 
   - name: poems_rookie
@@ -136,6 +147,7 @@ collections:
       - *field_title
       - *field_author
       - *field_ismain
+      - *field_mainorder
       - *field_content
 
   - name: poems_notice
@@ -163,4 +175,5 @@ collections:
       - *field_title
       - *field_author
       - *field_ismain
+      - *field_mainorder
       - *field_content

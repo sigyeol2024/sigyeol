@@ -2,7 +2,7 @@
 /**
  * content/poems/*.json → poems-index.js + poems/{id}.json
  *
- * Index (metadata only): id, order, category, title, author, isMain
+ * Index (metadata only): id, order, category, title, author, isMain, mainOrder
  * Bodies: poems/{id}.json with { id, content } — fetched on demand by the site.
  *
  * Also writes poems.js as a copy of the light index so legacy admin
@@ -223,9 +223,15 @@ function loadPoems() {
       orderRaw == null || orderRaw === ''
         ? null
         : parseFloat(String(orderRaw).trim());
+    const mainOrderRaw = data.mainOrder;
+    const mainOrderNum =
+      mainOrderRaw == null || mainOrderRaw === ''
+        ? null
+        : parseFloat(String(mainOrderRaw).trim());
     poems.push({
       id: data.id,
       order: Number.isFinite(orderNum) ? orderNum : null,
+      mainOrder: Number.isFinite(mainOrderNum) ? mainOrderNum : null,
       category: data.category,
       title: data.title,
       author: data.author,
@@ -255,6 +261,7 @@ function toIndexEntry(p) {
     title: p.title,
     author: p.author,
     isMain: p.isMain,
+    mainOrder: p.mainOrder,
   };
 }
 

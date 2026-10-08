@@ -5,7 +5,8 @@ const poems = [
     "category": "주목한 시",
     "title": "북치는 소년",
     "author": "김종삼",
-    "isMain": true
+    "isMain": true,
+    "mainOrder": null
   },
   {
     "id": 1785218131010,
@@ -13,7 +14,8 @@ const poems = [
     "category": "주목한 시",
     "title": "병원",
     "author": "윤동주",
-    "isMain": true
+    "isMain": true,
+    "mainOrder": null
   },
   {
     "id": 1785217979404,
@@ -21,7 +23,8 @@ const poems = [
     "category": "주목한 시",
     "title": "여승",
     "author": "백석",
-    "isMain": false
+    "isMain": false,
+    "mainOrder": null
   },
   {
     "id": 1785217758321,
@@ -29,7 +32,8 @@ const poems = [
     "category": "신인상",
     "title": "영혼 굽기",
     "author": "조정현",
-    "isMain": true
+    "isMain": true,
+    "mainOrder": null
   },
   {
     "id": 1785217584202,
@@ -37,6 +41,7 @@ const poems = [
     "category": "공지사항",
     "title": "2026년 시결 신인상 공모",
     "author": "편집부",
-    "isMain": false
+    "isMain": false,
+    "mainOrder": null
   }
 ];
