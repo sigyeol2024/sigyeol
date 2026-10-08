@@ -35,17 +35,6 @@
             --transition: 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        body.dark-mode {
-            --paper: #151413;
-            --ink: #e7e2d9;
-            --muted: #9a948a;
-            --rule: #d6d0c5;
-            --hair: #36332f;
-            --accent: #6fb390;
-            --sigyeol-green: #4aad7a;
-            --text-muted: #7f7a72;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html { -webkit-text-size-adjust: 100%; }
@@ -70,36 +59,6 @@
             padding: 18px 28px 56px;
         }
 
-        /* ========== Running header ========== */
-        .run-head {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.65rem;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            padding: 6px 0 8px;
-            border-bottom: 1px solid var(--rule);
-            text-transform: uppercase;
-            transition: border-color var(--transition);
-        }
-        .run-head .rh-left { white-space: nowrap; }
-        .run-head .rh-mid {
-            letter-spacing: 0.22em;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 340px;
-        }
-        .run-head .rh-right {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 14px;
-            white-space: nowrap;
-        }
         .text-btn {
             background: none;
             border: none;
@@ -112,18 +71,14 @@
             transition: color var(--transition);
         }
         .text-btn:hover { color: var(--accent); }
-        .theme-toggle-btn { color: var(--muted); }
-        .theme-toggle-btn .t-light,
-        body.dark-mode .theme-toggle-btn .t-dark { display: none; }
-        body.dark-mode .theme-toggle-btn .t-light { display: inline; }
 
         /* ========== Masthead ========== */
         .mast {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
+            display: flex;
+            justify-content: space-between;
             gap: 24px;
-            align-items: end;
-            padding: 28px 0 18px;
+            align-items: flex-end;
+            padding: 22px 0 18px;
             border-bottom: 2.5px solid var(--rule);
             transition: border-color var(--transition);
         }
@@ -164,15 +119,6 @@
             text-transform: uppercase;
             margin-top: 12px;
             font-weight: 400;
-        }
-
-        .mast-aside {
-            font-size: 0.68rem;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            text-align: right;
-            line-height: 1.7;
-            padding-bottom: 6px;
         }
 
         nav.mast-nav { padding-bottom: 8px; }
@@ -250,7 +196,7 @@
             line-height: 1.95;
             min-height: 1.95em;
         }
-        .lead-body p { margin: 0; }
+        .lead-body p { margin: 0; text-indent: 0.8em; }
         .lead-body .sp { height: 0.9em; }
         .lead-link {
             display: inline-block;
@@ -270,15 +216,6 @@
         }
 
         .side-col { padding-top: 4px; min-width: 0; }
-        .toc-h {
-            font-size: 0.64rem;
-            letter-spacing: 0.2em;
-            color: var(--muted);
-            border-bottom: 1px solid var(--rule);
-            padding-bottom: 8px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
         .toc-item {
             display: block;
             padding: 12px 0;
@@ -303,14 +240,11 @@
             margin-top: 3px;
             letter-spacing: 0.04em;
         }
-        .toc-item:hover .toc-title { color: var(--accent); }
-        .toc-empty {
-            padding: 14px 0;
-            font-size: 0.8rem;
-            color: var(--muted);
-            border-bottom: 1px solid var(--hair);
-            font-style: italic;
-        }
+        .toc-list { border-top: 1px solid var(--rule); }
+        .toc-item:hover .toc-title,
+        .toc-item.current .toc-title { color: var(--accent); }
+        .lead.swap .lead-swap { animation: leadFade 0.22s ease; }
+        @keyframes leadFade { from { opacity: 0.35; } to { opacity: 1; } }
 
         /* ---- Category pages ---- */
         .section-header {
@@ -487,6 +421,11 @@
             overflow-wrap: break-word;
             color: var(--ink);
             margin-bottom: 44px;
+            text-indent: 0.8em;
+        }
+        .poem-detail-content p,
+        .poem-detail-content div {
+            text-indent: 0.8em;
         }
         .poem-detail-content b, .poem-detail-content strong { font-weight: 700; }
         .poem-detail-content a { border-bottom: 1px solid var(--hair); }
@@ -551,15 +490,13 @@
         /* ========== Mobile ========== */
         @media (max-width: 780px) {
             .page { padding: 12px 16px 44px; }
-            .run-head { grid-template-columns: 1fr auto; }
-            .run-head .rh-mid { display: none; }
             .mast {
-                grid-template-columns: 1fr;
+                flex-direction: column;
+                align-items: center;
                 gap: 16px;
                 text-align: center;
-                justify-items: center;
+                padding-top: 18px;
             }
-            .mast-aside { display: none; }
             nav.mast-nav { width: 100%; padding-bottom: 4px; }
             nav.mast-nav ul { justify-content: center; gap: 8px 12px; }
             nav.mast-nav a { font-size: 0.74rem; }
@@ -571,8 +508,6 @@
             .lead {
                 border-right: none;
                 padding-right: 0;
-                padding-bottom: 28px;
-                border-bottom: 1px solid var(--rule);
             }
             .lead-title { font-size: 1.75rem; }
             .section-header { padding-top: 24px; }
@@ -596,21 +531,11 @@
         @media (max-width: 400px) {
             .title-char-si { font-size: 1.95rem; }
             .title-char-gyeol { font-size: 2.1rem; }
-            .run-head .rh-right { gap: 10px; }
         }
     </style>
 </head>
 <body>
 <div class="page">
-
-    <div class="run-head">
-        <span class="rh-left">시결 · Poetry Webzine</span>
-        <span class="rh-mid" id="run-head-mid">Contents</span>
-        <span class="rh-right">
-            <button class="text-btn random-link" onclick="openRandomPoem()" title="무작위 한 편 읽기">무작위 한 편</button>
-            <button class="text-btn theme-toggle-btn" onclick="toggleDarkMode()" title="화면 모드 변경" aria-label="화면 모드 변경"><span class="t-dark">어둡게</span><span class="t-light">밝게</span></button>
-        </span>
-    </div>
 
     <header class="mast">
         <div class="logo-lockup">
@@ -619,10 +544,6 @@
                 <span class="title-char-gyeol">결</span>
             </div>
             <div class="site-subtitle">POETRY WEBZINE</div>
-        </div>
-        <div class="mast-aside">
-            신작시 · 주목한 시<br>
-            신인상 · 공지
         </div>
         <nav class="mast-nav" aria-label="분류">
             <ul>
@@ -652,14 +573,14 @@
         <section id="section-main" class="page-section active">
             <div class="spread">
                 <article class="lead" id="featured">
-                    <div class="folio-label" id="featured-label">Featured</div>
-                    <h1 class="lead-title"><a id="featured-title" href="./"></a></h1>
-                    <div class="lead-author" id="featured-author"></div>
-                    <div class="lead-body" id="featured-body"></div>
-                    <a class="lead-link" id="featured-link" href="./">이어서 읽기</a>
+                    <div class="lead-swap">
+                        <h1 class="lead-title"><a id="featured-title" href="./"></a></h1>
+                        <div class="lead-author" id="featured-author"></div>
+                        <div class="lead-body" id="featured-body"></div>
+                        <a class="lead-link" id="featured-link" href="./">이어서 읽기</a>
+                    </div>
                 </article>
                 <aside class="side-col">
-                    <div class="toc-h">Index</div>
                     <div id="grid-main" class="poetry-grid toc-list"></div>
                     <div id="pagination-main" class="pagination"></div>
                 </aside>
@@ -715,23 +636,9 @@
         const ITEMS_PER_PAGE = 12, PAGES_PER_BLOCK = 10;
         let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1 };
 
-        const CATEGORY_ORDER = ['신작시', '주목한 시', '신인상', '공지사항'];
         const SECTION_IDS = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
-        const FEATURED_CATEGORY = '주목한 시';
+        const FEATURED_POOL = ['신작시', '주목한 시', '신인상']; // never 공지사항
         const EXCERPT_LINES = 6;
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        }
-        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-
-        function openRandomPoem() {
-            const poemList = currentPoems.filter(p => p.category !== '공지사항');
-            if (poemList.length === 0) return alert('읽을 수 있는 작품이 아직 없습니다.');
-            const randomIndex = Math.floor(Math.random() * poemList.length);
-            navigateToPoemDetail(poemList[randomIndex].id);
-        }
 
         function copyCurrentLink() {
             navigator.clipboard.writeText(window.location.href).then(() => {
@@ -836,7 +743,10 @@
             a.appendChild(el('div', 'toc-cat', item.category));
             a.appendChild(el('div', 'toc-title', item.title));
             a.appendChild(el('div', 'toc-author', item.author));
+            a.dataset.id = item.id;
+            if (item.id == featuredId) a.classList.add('current');
             bindOpen(a, item.id);
+            a.addEventListener('mouseenter', () => onRowHover(item));
             return a;
         }
         // Category page row: number / title / poet
@@ -893,45 +803,75 @@
             });
         }
 
-        function pickFeatured(sorted) {
-            return sorted.find(p => p.category === FEATURED_CATEGORY)
-                || sorted.find(p => p.category !== '공지사항')
-                || null;
+        // Featured poem: picked at random once per page load from 신작시 / 주목한 시 / 신인상.
+        function pickRandomFeatured() {
+            const pool = currentPoems.filter(p => FEATURED_POOL.includes(p.category));
+            if (pool.length === 0) return null;
+            return pool[Math.floor(Math.random() * pool.length)];
         }
 
-        let featuredId = null;
-        function renderFeatured(sorted) {
+        let featuredItem = pickRandomFeatured();
+        let featuredId = null;      // id currently rendered on the left
+        let featuredToken = 0;      // only the latest request may render (hover races)
+
+        function showFeatured(item, animate) {
             const lead = document.getElementById('featured');
-            const item = pickFeatured(sorted);
-            const label = document.getElementById('featured-label');
             const titleEl = document.getElementById('featured-title');
             const authorEl = document.getElementById('featured-author');
             const body = document.getElementById('featured-body');
             const link = document.getElementById('featured-link');
+            const token = ++featuredToken;
             if (!item) {
                 featuredId = null;
-                label.textContent = 'Featured';
                 titleEl.textContent = '';
                 authorEl.textContent = '';
                 link.style.display = 'none';
                 body.textContent = '';
-                body.appendChild(el('div', 'lead-empty', '수록 예정'));
                 return;
             }
             const changed = featuredId !== item.id;
             featuredId = item.id;
-            label.textContent = 'Featured · ' + item.category;
+            featuredItem = item;
             titleEl.textContent = item.title;
             authorEl.textContent = item.author;
             link.style.display = '';
             bindOpen(titleEl, item.id);
             bindOpen(link, item.id);
+            document.querySelectorAll('#grid-main .toc-item').forEach(a => a.classList.toggle('current', a.dataset.id == item.id));
+            if (changed && animate) {
+                lead.classList.remove('swap');
+                void lead.offsetWidth; // restart the short fade
+                lead.classList.add('swap');
+            }
             if (item.content != null) { renderExcerpt(body, item.content); return; }
             if (changed) body.textContent = '';
             ensurePoemBody(item.id).then(loaded => {
-                if (featuredId !== item.id || !loaded) return;
+                if (token !== featuredToken || !loaded) return; // a newer hover won
                 renderExcerpt(body, loaded.content || '');
             }).catch(() => { /* title/poet stay; 이어서 읽기 still opens it */ });
+        }
+
+        // PC hover preview: hovering a list row swaps the left poem (mouse + wide screens only).
+        const hoverPreviewMQ = window.matchMedia('(hover: hover) and (min-width: 900px)');
+        let hoverTimer = null, listPrefetched = false;
+        function prefetchListedBodies() {
+            if (listPrefetched) return;
+            listPrefetched = true;
+            currentPoems.filter(p => p.isMain).forEach(p => ensurePoemBody(p.id).catch(() => null));
+        }
+        function onRowHover(item) {
+            if (!hoverPreviewMQ.matches) return;
+            prefetchListedBodies();
+            clearTimeout(hoverTimer);
+            hoverTimer = setTimeout(() => {
+                if (featuredId !== item.id) showFeatured(item, true);
+            }, 70);
+        }
+        function schedulePrefetch() {
+            if (!hoverPreviewMQ.matches) return;
+            const run = () => prefetchListedBodies();
+            if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 3000 });
+            else setTimeout(run, 1500);
         }
 
         function renderData() {
@@ -944,7 +884,6 @@
                 filtered = filtered.filter(p => matchesSearch(p, type, kw));
             }
 
-            renderFeatured(sorted);
 
             Object.keys(SECTION_IDS).forEach(cat => {
                 const gridId = 'grid-' + SECTION_IDS[cat];
@@ -955,8 +894,8 @@
                 if (!grid) return;
                 grid.innerHTML = ''; page.innerHTML = '';
 
-                // Home index lists every post (search box is not shown on home).
-                const items = cat === 'main' ? sorted : filtered.filter(p => p.category === cat);
+                // Home list: only posts flagged '메인 페이지 노출' (isMain) in the CMS; not filtered by search.
+                const items = cat === 'main' ? sorted.filter(p => p.isMain) : filtered.filter(p => p.category === cat);
 
                 if (cat !== 'main') {
                     const total = sorted.filter(p => p.category === cat).length;
@@ -969,7 +908,7 @@
 
                 if (items.length === 0) {
                     if (cat === 'main') {
-                        CATEGORY_ORDER.forEach(c => grid.appendChild(el('div', 'toc-empty', emptyLine(c))));
+                        // nothing flagged for the main page: leave the list empty
                     } else if (kw) {
                         grid.appendChild(el('div', 'no-result', '검색 결과가 없습니다.'));
                     } else {
@@ -987,13 +926,6 @@
                 pagedItems.forEach((item, i) => {
                     grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item, offset + i + 1));
                 });
-
-                // Home: quiet line for categories that have nothing yet (last page only).
-                if (cat === 'main' && curPage === totalPages) {
-                    CATEGORY_ORDER.forEach(c => {
-                        if (!sorted.some(p => p.category === c)) grid.appendChild(el('div', 'toc-empty', emptyLine(c)));
-                    });
-                }
 
                 if (totalPages > 1 && page) {
                     const start = (Math.ceil(curPage / PAGES_PER_BLOCK) - 1) * PAGES_PER_BLOCK + 1;
@@ -1045,11 +977,6 @@
             }
         });
 
-        function setRunHead(text) {
-            const mid = document.getElementById('run-head-mid');
-            if (mid) mid.textContent = text;
-        }
-
         function showSection(secId) {
             if (!document.getElementById('section-' + secId)) secId = 'main';
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
@@ -1065,9 +992,6 @@
                 if (header && header.nextElementSibling !== search) header.after(search);
             }
             search.classList.toggle('active', showSearch);
-
-            if (secId === 'main') setRunHead('Contents');
-            else if (nav) setRunHead(nav.textContent);
 
             if (secId !== 'poem-detail') { currentSection = secId; previousSection = secId; }
             window.scrollTo({ top: 0, behavior: 'smooth' }); renderData();
@@ -1090,7 +1014,6 @@
             }
 
             showSection('poem-detail');
-            setRunHead(item.category);
             const catNav = document.getElementById('nav-' + SECTION_IDS[item.category]);
             if (catNav) catNav.classList.add('active');
 
@@ -1129,7 +1052,9 @@
             }
         }
 
+        showFeatured(featuredItem, false);
         initApp();
+        schedulePrefetch();
     </script>
 </body>
 </html>
