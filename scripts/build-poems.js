@@ -10,6 +10,10 @@
  * Also writes poems.js as a copy of the light index so legacy admin
  * (order-autoset) and docs that still mention poems.js keep working.
  *
+ * Also writes p/{id}/index.html: a tiny static share page per poem with Open Graph /
+ * Twitter meta (title, poet, logo image) for KakaoTalk & social crawlers (no JS needed),
+ * which then sends readers to the SPA route /?id={id}. p/ is build output (gitignored).
+ *
  * Netlify: npm run build / node scripts/build-poems.js
  *
  * content 필드는 Decap poem-html 위젯이 저장하는 HTML을 우선 사용합니다.
@@ -24,6 +28,9 @@ const CONTENT_DIR = path.join(ROOT, 'content', 'poems');
 const OUT_INDEX = path.join(ROOT, 'poems-index.js');
 const OUT_LEGACY = path.join(ROOT, 'poems.js'); // light index alias
 const OUT_BODIES_DIR = path.join(ROOT, 'poems');
+const OUT_SHARE_DIR = path.join(ROOT, 'p'); // share pages: p/{id}/index.html
+const SITE_URL = (process.env.SITE_URL || 'https://sigyeol.com').replace(/\/+$/, '');
+const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png';
 
 function escapeHtml(s) {
   return String(s)
@@ -301,7 +308,74 @@ function writeOutputs(poems) {
     }
   }
 
+  writeSharePages(poems);
+
   return { indexCount: index.length, bodiesDir: OUT_BODIES_DIR };
+}
+
+/** Attribute-safe text (also escapes ' for single-quoted contexts). */
+function escAttr(s) {
+  return escapeHtml(s).replace(/'/g, '&#39;');
+}
+
+/**
+ * p/{id}/index.html — static page whose <head> carries the poem's share card.
+ * No meta refresh on purpose: some crawlers follow it and would read the generic
+ * home card instead. Readers are sent on by JS (location.replace), with a plain link
+ * as the no-JS fallback.
+ */
+function sharePageHtml(p) {
+  const id = String(p.id);
+  const pageUrl = SITE_URL + '/p/' + encodeURIComponent(id) + '/';
+  const appUrl = '/?id=' + encodeURIComponent(id);
+  const who = p.author ? p.author : '';
+  const ogTitle = p.title + (who ? ' — ' + who : '');
+  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | 시 웹진 《시결》';
+  const e = escAttr;
+  return [
+    '<!DOCTYPE html>',
+    '<html lang="ko">',
+    '<head>',
+    '<meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '<title>' + escapeHtml(ogTitle) + ' | 시결</title>',
+    '<meta name="description" content="' + e(desc) + '">',
+    '<link rel="canonical" href="' + e(pageUrl) + '">',
+    '<meta property="og:type" content="article">',
+    '<meta property="og:site_name" content="시결">',
+    '<meta property="og:locale" content="ko_KR">',
+    '<meta property="og:title" content="' + e(ogTitle) + '">',
+    '<meta property="og:description" content="' + e(desc) + '">',
+    '<meta property="og:url" content="' + e(pageUrl) + '">',
+    '<meta property="og:image" content="' + e(OG_IMAGE) + '">',
+    '<meta property="og:image:width" content="1200">',
+    '<meta property="og:image:height" content="630">',
+    '<meta property="og:image:alt" content="시결 POETRY WEBZINE 로고">',
+    who ? '<meta property="article:author" content="' + e(who) + '">' : '',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="twitter:title" content="' + e(ogTitle) + '">',
+    '<meta name="twitter:description" content="' + e(desc) + '">',
+    '<meta name="twitter:image" content="' + e(OG_IMAGE) + '">',
+    '<link rel="icon" href="/favicon.ico" sizes="any">',
+    '<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">',
+    '<script>location.replace(' + JSON.stringify(appUrl).replace(/</g, '\\u003c') + ');</script>',
+    '<style>body{margin:0;background:#f3efe8;color:#141312;font-family:"Noto Serif KR",serif;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center}a{color:#2f6b4f}</style>',
+    '</head>',
+    '<body>',
+    '<p>' + escapeHtml(ogTitle) + '<br><a href="' + e(appUrl) + '">시결에서 읽기</a></p>',
+    '</body>',
+    '</html>',
+    '',
+  ].filter((l) => l !== '').join('\n');
+}
+
+function writeSharePages(poems) {
+  fs.rmSync(OUT_SHARE_DIR, { recursive: true, force: true }); // drop pages of deleted poems
+  for (const p of poems) {
+    const dir = path.join(OUT_SHARE_DIR, String(p.id));
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), sharePageHtml(p), 'utf8');
+  }
 }
 
 module.exports = {
@@ -316,6 +390,8 @@ module.exports = {
   OUT_INDEX,
   OUT_LEGACY,
   OUT_BODIES_DIR,
+  OUT_SHARE_DIR,
+  sharePageHtml,
   OUT_FILE: OUT_LEGACY, // back-compat for any require() of OUT_FILE
   ROOT,
 };

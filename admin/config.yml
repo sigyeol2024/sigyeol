@@ -74,7 +74,7 @@ x-field-content: &field_content
   label: 본문
   name: content
   widget: poem-html
-  hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장됩니다."
+  hint: "도구모음: 굵게·기울임·밑줄·취소선·글자 크기(작은 가/큰 가/기본, 7단계 — 선택한 글자 또는 커서가 있는 줄)·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장됩니다."
 
 collections:
   - name: site_publish

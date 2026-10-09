@@ -36,6 +36,39 @@
   background: #eee;
 }
 
+/* Font size control: 작은 가 · level · 큰 가 · 기본 */
+.sigyeol-poem-toolbar button.sigyeol-fs-btn {
+  min-width: 34px;
+  font-family: 'Noto Serif KR', 'Batang', serif;
+}
+.sigyeol-poem-toolbar button.sigyeol-fs-btn.is-disabled {
+  opacity: 0.4;
+  cursor: default;
+  background: #fff;
+}
+.sigyeol-fs-glyph { display: inline-block; line-height: 1; }
+.sigyeol-fs-glyph.is-small { font-size: 11px; }
+.sigyeol-fs-glyph.is-large { font-size: 16px; }
+.sigyeol-fs-level {
+  display: inline-block;
+  min-width: 44px;
+  margin: 0 4px 0 2px;
+  font-size: 12px;
+  text-align: center;
+  color: #666;
+  font-family: system-ui, -apple-system, sans-serif;
+  white-space: nowrap;
+}
+.sigyeol-fs-level.is-set { color: #2f6b4f; font-weight: 600; }
+
+/* Stored font-size spans (same scale as the site) */
+.sigyeol-poem-body .fs-m3 { font-size: 0.8em; }
+.sigyeol-poem-body .fs-m2 { font-size: 0.87em; }
+.sigyeol-poem-body .fs-m1 { font-size: 0.93em; }
+.sigyeol-poem-body .fs-p1 { font-size: 1.12em; }
+.sigyeol-poem-body .fs-p2 { font-size: 1.25em; }
+.sigyeol-poem-body .fs-p3 { font-size: 1.4em; }
+
 .sigyeol-poem-toolbar-sep {
   width: 1px;
   height: 18px;
