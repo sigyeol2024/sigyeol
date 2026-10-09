@@ -2,7 +2,9 @@
 /**
  * content/poems/*.json → poems-index.js + poems/{id}.json
  *
- * Index (metadata only): id, order, category, title, author, isMain, mainOrder
+ * Index (metadata only): id, order, category, title, author, isMain, mainOrder, v
+ *   v = short hash of the body. The site fetches poems/{id}.json?v={v}, so an edited
+ *   body gets a new URL and browsers never show a stale cached copy.
  * Bodies: poems/{id}.json with { id, content } — fetched on demand by the site.
  *
  * Also writes poems.js as a copy of the light index so legacy admin
@@ -15,6 +17,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.join(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'content', 'poems');
@@ -262,7 +265,13 @@ function toIndexEntry(p) {
     author: p.author,
     isMain: p.isMain,
     mainOrder: p.mainOrder,
+    v: contentVersion(p.content),
   };
+}
+
+/** Short content hash used as a cache-busting version for poems/{id}.json. */
+function contentVersion(html) {
+  return crypto.createHash('sha1').update(String(html || ''), 'utf8').digest('hex').slice(0, 10);
 }
 
 function writeOutputs(poems) {

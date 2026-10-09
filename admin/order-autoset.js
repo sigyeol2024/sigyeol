@@ -1,10 +1,11 @@
 /**
- * Decap preSave: auto-assign `order` for new poems so they land at the top
- * of their category without colliding with existing integers.
+ * Decap preSave: auto-assign two independent orders.
  *
- * Rule: if order is blank/missing → (min order in same category) − 1.
- * If the category has no poems yet → 1.
- * Existing / manually entered order values are left unchanged.
+ * 1) `order` (category page): if blank → (min order in same category) − 1; none yet → 1.
+ * 2) `mainOrder` (home INDEX): only when isMain is checked and mainOrder is blank →
+ *    (min mainOrder among published isMain posts) − 1; none yet → 1.
+ * The two never look at each other. Manually entered values are left unchanged.
+ * "Published" = the live /poems-index.js (what the site currently shows).
  */
 (function () {
   var POEM_COLLECTIONS = {
@@ -52,6 +53,31 @@
     return min;
   }
 
+  function minMainOrder(poems, excludeId) {
+    var min = null;
+    if (!Array.isArray(poems)) return null;
+    for (var i = 0; i < poems.length; i++) {
+      var p = poems[i];
+      if (!p || !p.isMain) continue;
+      if (excludeId != null && Number(p.id) === Number(excludeId)) continue;
+      var o = parseOrder(p.mainOrder);
+      if (o == null) continue;
+      if (min == null || o < min) min = o;
+    }
+    return min;
+  }
+
+  function nextAbove(min) {
+    var next = min == null ? 1 : min - 1;
+    // Keep one decimal place when min was fractional (e.g. 0.5 → -0.5).
+    if (Math.abs(next % 1) > 1e-9) next = Math.round(next * 10) / 10;
+    return next;
+  }
+
+  function isChecked(v) {
+    return v === true || v === 'true';
+  }
+
   function fetchPublishedPoems() {
     function load(url) {
       return fetch(url + '?_=' + Date.now(), { cache: 'no-store' })
@@ -79,24 +105,24 @@
       if (!POEM_COLLECTIONS[collection]) return entry.get('data');
 
       var data = entry.get('data');
-      if (!isBlankOrder(data.get('order'))) return data;
+      var needOrder = isBlankOrder(data.get('order'));
+      var needMain = isChecked(data.get('isMain')) && isBlankOrder(data.get('mainOrder'));
+      if (!needOrder && !needMain) return data;
 
       var category = data.get('category') || '';
       var excludeId = data.get('id');
 
       return fetchPublishedPoems()
         .then(function (poems) {
-          var min = minOrderInCategory(poems, category, excludeId);
-          var next = min == null ? 1 : min - 1;
-          // Keep one decimal place when min was fractional (e.g. 0.5 → -0.5).
-          if (Math.abs(next % 1) > 1e-9) {
-            next = Math.round(next * 10) / 10;
-          }
-          return data.set('order', next);
+          if (needOrder) data = data.set('order', nextAbove(minOrderInCategory(poems, category, excludeId)));
+          if (needMain) data = data.set('mainOrder', nextAbove(minMainOrder(poems, excludeId)));
+          return data;
         })
         .catch(function () {
           // Offline / parse failure: still put new posts above typical defaults.
-          return data.set('order', 0);
+          if (needOrder) data = data.set('order', 0);
+          if (needMain) data = data.set('mainOrder', 0);
+          return data;
         });
     },
   });

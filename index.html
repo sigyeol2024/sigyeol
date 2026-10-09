@@ -98,17 +98,18 @@
             transition: opacity var(--transition);
         }
         .site-title-wrapper:hover { opacity: 0.85; }
+        /* Logo ~16% larger than the original (2.5/2.7rem); offsets scaled to match */
         .title-char-si {
-            font-size: 2.5rem;
+            font-size: 2.9rem;
             font-weight: 500;
             letter-spacing: 0.08em;
-            margin-right: 12px;
+            margin-right: 14px;
         }
         .title-char-gyeol {
-            font-size: 2.7rem;
+            font-size: 3.12rem;
             font-weight: 500;
             letter-spacing: 0.08em;
-            margin-left: 8px;
+            margin-left: 9px;
             margin-top: -1px;
         }
         .site-subtitle {
@@ -524,12 +525,12 @@
             footer.run-foot { margin-top: 44px; }
         }
         @media (max-width: 768px) {
-            .title-char-si { font-size: 2.15rem; }
-            .title-char-gyeol { font-size: 2.3rem; }
+            .title-char-si { font-size: 2.5rem; }
+            .title-char-gyeol { font-size: 2.66rem; }
         }
         @media (max-width: 400px) {
-            .title-char-si { font-size: 1.95rem; }
-            .title-char-gyeol { font-size: 2.1rem; }
+            .title-char-si { font-size: 2.26rem; }
+            .title-char-gyeol { font-size: 2.43rem; }
         }
     </style>
 </head>
@@ -644,7 +645,10 @@
             if (!item) return Promise.resolve(null);
             if (item.content != null) return Promise.resolve(item);
             if (bodyFetchCache.has(id)) return bodyFetchCache.get(id);
-            const promise = fetch('poems/' + id + '.json', { cache: 'force-cache' })
+            // Versioned URL (v = content hash from the build): an edited body gets a new URL,
+            // so a copy cached before the edit can never be shown. Without v, always revalidate.
+            const url = 'poems/' + id + '.json' + (item.v ? '?v=' + encodeURIComponent(item.v) : '');
+            const promise = fetch(url, { cache: item.v ? 'default' : 'no-cache' })
                 .then(res => {
                     if (!res.ok) throw new Error('body ' + res.status);
                     return res.json();
@@ -680,15 +684,16 @@
             return Number(b.id) - Number(a.id);
         });
 
-        // mainOrder ascending first; posts without mainOrder follow in the normal display order (stable sort).
+        // Home INDEX order is independent of the category 'order':
+        // mainOrder ascending (lower = higher up); posts without mainOrder go last; ties → newest id first.
         const parseMainOrder = v => (v == null || v === '' || !Number.isFinite(parseFloat(v))) ? null : parseFloat(v);
-        function getMainListPoems(sorted) {
-            return sorted.filter(p => p.isMain).sort((a, b) => {
+        function getMainListPoems(list) {
+            return list.filter(p => p.isMain).sort((a, b) => {
                 const am = parseMainOrder(a.mainOrder), bm = parseMainOrder(b.mainOrder);
-                if (am == null && bm == null) return 0;
-                if (am == null) return 1;
-                if (bm == null) return -1;
-                return am - bm;
+                if (am != null && bm != null && am !== bm) return am - bm;
+                if (am == null && bm != null) return 1;
+                if (am != null && bm == null) return -1;
+                return Number(b.id) - Number(a.id);
             });
         }
 
