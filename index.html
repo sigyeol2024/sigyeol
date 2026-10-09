@@ -214,6 +214,9 @@
         }
         /* Left column shows the full text with the reading-view styles (.poem-detail-content). */
         .lead-body.poem-detail-content { margin-bottom: 0; min-height: 1.9em; }
+        /* Home left poem: same inset idea, smaller (the column is already narrow: 520 − 2×1rem ≈ 29 chars) */
+        .lead { --poem-inset: 1rem; }
+        .lead-title, .lead-author, .lead-body.poem-detail-content { padding-left: var(--poem-inset); padding-right: var(--poem-inset); }
 
         /* Home INDEX list: full height, no inner scroll box, no pagination — the page itself scrolls. */
         .side-col { padding-top: 4px; min-width: 0; }
@@ -393,7 +396,14 @@
             max-width: 660px;
             margin: 0 auto;
             padding: 40px 0 8px;
+            /* Book-like side margins: body measure 660 − 2×3.2rem ≈ 558px ≈ 33 Korean chars */
+            --poem-inset: 3.2rem;
         }
+        /* Label, title, author text and body share one inset edge; the hairline rules stay full width. */
+        .poem-detail-category,
+        .poem-detail-title,
+        .poem-detail-author,
+        .poem-detail-container .poem-detail-content { padding-left: var(--poem-inset); padding-right: var(--poem-inset); }
         .poem-detail-category {
             font-size: 0.64rem;
             letter-spacing: 0.22em;
@@ -420,7 +430,8 @@
         .poem-detail-content {
             font-family: var(--serif);
             font-size: 1.06rem;
-            line-height: 1.9;
+            line-height: 2;
+            letter-spacing: 0.01em;
             white-space: pre-line;
             /* Book-style setting: Korean wraps per syllable (no keep-all gaps) and lines are
                justified to a flush right edge; the last line of each paragraph stays left. */
@@ -531,7 +542,9 @@
             .search-container { gap: 10px; }
             .poem-detail-container { padding-top: 28px; }
             .poem-detail-title { font-size: 1.75rem; }
-            .poem-detail-content { font-size: 1rem; line-height: 1.9; }
+            .poem-detail-content { font-size: 1rem; line-height: 1.95; }
+            /* Mobile: 1.3rem each side → 358 − 41.6 ≈ 316px ≈ 20 chars per line */
+            .poem-detail-container, .lead { --poem-inset: 1.3rem; }
             footer.run-foot { margin-top: 44px; }
         }
         @media (max-width: 768px) {
