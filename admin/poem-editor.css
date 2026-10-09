@@ -100,6 +100,12 @@
   border-bottom: 1px solid var(--sg-border);
 }
 
+/* Default inline "text-align: left" from the toolbar = justify (center/right are kept) */
+.sigyeol-poem-body [style*="text-align: left"],
+.sigyeol-poem-body [style*="text-align:left"] {
+  text-align: justify !important;
+}
+
 /* contenteditable body — like .poem-detail-content */
 .sigyeol-poem-body {
   min-height: 280px;
@@ -109,7 +115,11 @@
   line-height: 2.35;
   color: var(--sg-text);
   white-space: pre-wrap;
-  word-break: keep-all;
+  /* Match the site: per-syllable wrapping + justified lines (last line stays left) */
+  word-break: normal;
+  line-break: strict;
+  overflow-wrap: break-word;
+  text-align: justify;
   padding: 0 12px;
   margin: 0;
   outline: none;

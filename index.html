@@ -422,12 +422,22 @@
             font-size: 1.06rem;
             line-height: 1.9;
             white-space: pre-line;
-            word-break: keep-all;
-            overflow-wrap: break-word;
+            /* Book-style setting: Korean wraps per syllable (no keep-all gaps) and lines are
+               justified to a flush right edge; the last line of each paragraph stays left. */
+            word-break: normal;
+            line-break: strict;
+            overflow-wrap: break-word; /* long latin strings / URLs still break */
+            text-align: justify;
+            text-align-last: auto;
             color: var(--ink);
             margin-bottom: 44px;
             text-indent: 0.8em;
         }
+        /* The editor stores the default alignment as inline "text-align: left" (outer wrapper and
+           any line set to 왼쪽). Treat that as the default → justify. Inline center/right are untouched
+           and still win, including for lines nested inside a centered/right block (inheritance). */
+        .poem-detail-content [style*="text-align: left"],
+        .poem-detail-content [style*="text-align:left"] { text-align: justify !important; }
         .poem-detail-content p,
         .poem-detail-content div {
             text-indent: 0.8em;
