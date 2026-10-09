@@ -120,7 +120,6 @@
   line-break: strict;
   overflow-wrap: break-word;
   text-align: justify;
-  letter-spacing: 0.01em;
   padding: 0 12px;
   margin: 0;
   outline: none;
@@ -172,7 +171,6 @@
     padding: 0;
     font-size: 0.98rem;
     line-height: 2.25;
-    --sg-poem-inset: 1.3rem;
   }
 
   .sigyeol-poem-meta-title {
@@ -191,9 +189,8 @@ div.sigyeol-poem-body {
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
-  /* Side inset mirrors the site (PC card measure ≈ 33 chars; mobile 1.3rem each side) */
-  padding-left: var(--sg-poem-inset, 12px) !important;
-  padding-right: var(--sg-poem-inset, 12px) !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   margin: 0 !important;
