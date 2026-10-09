@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <title>시결 편집 — Decap CMS</title>
+  <title>시결 편집실</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,6 +17,9 @@
   <!-- Custom poem body editor: bold/italic/underline/strikethrough + align; HTML storage -->
   <script src="/admin/poem-editor.js"></script>
   <script src="/admin/order-autoset.js"></script>
+  <!-- 사이트 발행(일괄 배포) 위젯 + 한국어 문구 보정 -->
+  <script src="/admin/publish.js"></script>
+  <script src="/admin/ko-overrides.js"></script>
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on('init', function (user) {

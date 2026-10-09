@@ -1,6 +1,9 @@
 [build]
   command = "npm run build"
   publish = "."
+  # 일괄 발행: CMS 저장마다 배포하지 않음. 발행 요청/빌드 훅/[배포] 커밋일 때만 빌드.
+  # exit 1 = 빌드, exit 0 = 건너뜀. 자세한 내용은 scripts/should-build.js, 발행.md
+  ignore = "node ./scripts/should-build.js"
 
 # SPA-style admin; Identity/Git Gateway are enabled in Netlify UI
 [[redirects]]

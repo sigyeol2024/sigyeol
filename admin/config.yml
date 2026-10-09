@@ -8,21 +8,32 @@
 backend:
   name: git-gateway
   branch: main
+  # 커밋 메시지 (발행 표시 '[배포]'를 넣지 않음 → 저장만으로는 배포되지 않음)
+  commit_messages:
+    create: "새 글 {{collection}} “{{slug}}”"
+    update: "수정 {{collection}} “{{slug}}”"
+    delete: "삭제 {{collection}} “{{slug}}”"
+    uploadMedia: "이미지 올림 “{{path}}”"
+    deleteMedia: "이미지 삭제 “{{path}}”"
+
+# 관리 화면 한국어 (Decap 내장 ko 로케일 + admin/ko-overrides.js)
+locale: "ko"
 
 local_backend: false
 
 media_folder: static/media
 public_folder: /static/media
 
-# 바로 발행 (editorial workflow 끔)
+# 편집 워크플로우 끔: "저장"하면 바로 main에 커밋됩니다.
+# 단, 사이트 배포는 '사이트 발행'에서 발행 요청을 저장할 때만 일어납니다 (netlify.toml ignore).
 
 # 공통 필드 (YAML anchors) — 카테고리 hidden default만 컬렉션마다 다름
 x-field-id: &field_id
-  label: ID
+  label: 고유번호
   name: id
   widget: number
   value_type: int
-  hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일명·고유키용; 표시 순서는 아래 '표시 순서' 필드를 씁니다.)"
+  hint: "새 글은 브라우저 콘솔에서 Date.now() 값을 넣어 주세요. (파일 이름·고유키용 숫자이며, 화면 순서는 아래 '표시 순서'로 정합니다.)"
 
 x-field-order: &field_order
   label: "표시 순서 — 작을수록 위. 사이에 넣으려면 55.5처럼 소수 가능."
@@ -31,7 +42,7 @@ x-field-order: &field_order
   value_type: float
   step: 0.1
   required: false
-  hint: "작을수록 위. 비워 두고 Publish하면 해당 카테고리 최솟값−1이 자동으로 들어가 맨 위에 옵니다. 55와 56 사이는 55.5처럼 소수를 쓰세요. 같은 숫자면 ID가 큰 글이 위입니다."
+  hint: "작을수록 위. 비워 두고 저장하면 해당 카테고리 최솟값−1이 자동으로 들어가 맨 위에 옵니다. 55와 56 사이는 55.5처럼 소수를 쓰세요. 같은 숫자면 고유번호가 큰 글이 위입니다."
 
 x-field-title: &field_title
   label: 제목
@@ -66,6 +77,29 @@ x-field-content: &field_content
   hint: "도구모음: 굵게·기울임·밑줄·취소선·좌/중/우 정렬. Enter로 줄바꿈, 빈 줄은 Enter를 한 번 더. HTML로 저장됩니다."
 
 collections:
+  - name: site_publish
+    label: 사이트 발행
+    label_singular: 발행 요청
+    description: "저장한 글들을 사이트(sigyeol.com)에 한 번에 내보냅니다. ① 발행 요청 열기 → ② '발행 요청하기' → ③ 맨 위 '저장'. 발행 1번 = Netlify 배포 1번(15크레딧)."
+    create: false
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: publish
+        label: 발행 요청
+        file: content/publish.json
+        format: json
+        fields:
+          - label: 발행 요청
+            name: requestedAt
+            widget: publish-request
+          - label: 메모
+            name: memo
+            widget: string
+            required: false
+            hint: "무엇을 발행하는지 적어 두면 나중에 기록을 보기 편합니다."
+
   - name: poems_new
     label: 신작시
     label_singular: 글
