@@ -9,7 +9,6 @@
 (function () {
   var POEM_COLLECTIONS = {
     poems_new: true,
-    poems_spotlight: true,
     poems_rookie: true,
     poems_notice: true,
   };

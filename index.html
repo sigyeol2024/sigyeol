@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>시결 | POETRY WEBZINE</title>
     
-    <meta name="description" content="시 전문 웹진 시결(SIGYEOL). 신작시, 주목한 시, 신인상, 공지사항.">
+    <meta name="description" content="시 전문 웹진 시결(SIGYEOL). 신작시, 신인상, 공지사항.">
     <meta name="keywords" content="시, 시결, 웹진, POETRY, SIGYEOL, 문학, 시인">
     <meta name="robots" content="index, follow">
 
@@ -525,7 +525,6 @@
         <nav class="mast-nav" aria-label="분류">
             <ul>
                 <li><a onclick="navigateToSection('new-poems')" id="nav-new-poems">신작시</a></li>
-                <li><a onclick="navigateToSection('featured-poems')" id="nav-featured-poems">주목한 시</a></li>
                 <li><a onclick="navigateToSection('rookie-award')" id="nav-rookie-award">신인상</a></li>
                 <li><a onclick="navigateToSection('notice')" id="nav-notice">공지사항</a></li>
             </ul>
@@ -565,7 +564,6 @@
 
         <!-- Category pages -->
         <section id="section-new-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신작시</h1></div><div class="section-count" id="count-new-poems"></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
-        <section id="section-featured-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">주목한 시</h1></div><div class="section-count" id="count-featured-poems"></div></div><div id="grid-featured-poems" class="poetry-grid idx-list"></div><div id="pagination-featured-poems" class="pagination"></div></section>
         <section id="section-rookie-award" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신인상</h1></div><div class="section-count" id="count-rookie-award"></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
         <section id="section-notice" class="page-section"><div class="section-header"><div><h1 class="section-header-title">공지사항</h1></div><div class="section-count" id="count-notice"></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
 
@@ -606,10 +604,10 @@
         let bodySearchLoading = null;
 
         const ITEMS_PER_PAGE = 12, PAGES_PER_BLOCK = 10;
-        let pageStates = { 'main': 1, '신작시': 1, '주목한 시': 1, '신인상': 1, '공지사항': 1 };
+        let pageStates = { 'main': 1, '신작시': 1, '신인상': 1, '공지사항': 1 };
 
-        const SECTION_IDS = { 'main': 'main', '신작시': 'new-poems', '주목한 시': 'featured-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
-        const FEATURED_POOL = ['신작시', '주목한 시', '신인상']; // never 공지사항
+        const SECTION_IDS = { 'main': 'main', '신작시': 'new-poems', '신인상': 'rookie-award', '공지사항': 'notice' };
+        const FEATURED_POOL = ['신작시', '신인상']; // never 공지사항
 
         function copyCurrentLink() {
             navigator.clipboard.writeText(window.location.href).then(() => {
@@ -742,7 +740,7 @@
             return a;
         }
 
-        // Featured poem: picked at random once per page load from 신작시 / 주목한 시 / 신인상.
+        // Featured poem: picked at random once per page load from 신작시 / 신인상.
         // The left column shows the full body (same HTML + styles as the reading view).
         function pickRandomFeatured() {
             const pool = currentPoems.filter(p => FEATURED_POOL.includes(p.category));
