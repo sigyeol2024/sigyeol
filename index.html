@@ -121,28 +121,51 @@
             font-weight: 400;
         }
 
-        nav.mast-nav { padding-bottom: 8px; }
+        /* Category nav: serif, readable, large hit area; logo-green underline marks the current page */
+        nav.mast-nav { padding-bottom: 2px; }
         nav.mast-nav ul {
             list-style: none;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px 18px;
+            flex-wrap: nowrap;
+            gap: 0 6px;
             justify-content: flex-end;
         }
         nav.mast-nav a {
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            color: var(--muted);
+            position: relative;
+            display: block;
+            padding: 10px 12px 12px;
+            font-family: var(--serif);
+            font-size: 1.08rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            line-height: 1.2;
+            white-space: nowrap;
+            color: #3a3732;
             cursor: pointer;
-            padding-bottom: 1px;
-            border-bottom: 1px solid transparent;
-            transition: color var(--transition), border-color var(--transition);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: color var(--transition);
         }
-        nav.mast-nav a:hover { color: var(--ink); }
-        nav.mast-nav a.active {
-            color: var(--ink);
-            border-bottom-color: var(--ink);
+        nav.mast-nav li:last-child a { padding-right: 0; }
+        nav.mast-nav a::after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 4px;
+            height: 2px;
+            background: var(--sigyeol-green);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform var(--transition);
         }
+        nav.mast-nav li:last-child a::after { right: 0; }
+        nav.mast-nav a:hover,
+        nav.mast-nav a:focus-visible { color: var(--sigyeol-green); }
+        nav.mast-nav a:hover::after { transform: scaleX(0.55); }
+        nav.mast-nav a.active { color: var(--sigyeol-green); font-weight: 600; }
+        nav.mast-nav a.active::after { transform: scaleX(1); }
+        nav.mast-nav a:focus-visible { outline: 1px solid var(--sigyeol-green); outline-offset: -2px; }
 
         /* ========== Main ========== */
         main { min-height: 480px; }
@@ -191,16 +214,12 @@
         /* Left column shows the full text with the reading-view styles (.poem-detail-content). */
         .lead-body.poem-detail-content { margin-bottom: 0; min-height: 1.9em; }
 
+        /* Home INDEX list: full height, no inner scroll box, no pagination — the page itself scrolls. */
         .side-col { padding-top: 4px; min-width: 0; }
         @media (min-width: 781px) {
-            /* PC: keep the list in view while a long poem scrolls */
-            .side-col {
-                position: sticky;
-                top: 24px;
-                max-height: calc(100vh - 48px);
-                overflow-y: auto;
-                scrollbar-width: thin;
-            }
+            /* PC: while the list scrolls, keep the left poem in view if it fits the screen
+               (class toggled by updateLeadPin; long poems stay in normal flow). */
+            .lead.pinned { position: sticky; top: 24px; }
         }
         .toc-item {
             display: block;
@@ -474,9 +493,12 @@
                 text-align: center;
                 padding-top: 18px;
             }
-            nav.mast-nav { width: 100%; padding-bottom: 4px; }
-            nav.mast-nav ul { justify-content: center; gap: 8px 12px; }
-            nav.mast-nav a { font-size: 0.74rem; }
+            nav.mast-nav { width: 100%; padding-bottom: 0; }
+            nav.mast-nav ul { justify-content: center; gap: 0 4px; }
+            nav.mast-nav a { font-size: 1.02rem; padding: 10px 14px 12px; }
+            nav.mast-nav li:last-child a { padding-right: 14px; }
+            nav.mast-nav a::after { left: 14px; right: 14px; }
+            nav.mast-nav li:last-child a::after { right: 14px; }
             .spread {
                 grid-template-columns: 1fr;
                 gap: 36px;
@@ -776,9 +798,8 @@
                 lead.classList.remove('swap');
                 void lead.offsetWidth; // restart the short fade
                 lead.classList.add('swap');
-                // If the reader had scrolled into a long poem, bring the new poem's start into view.
-                const top = lead.getBoundingClientRect().top;
-                if (top < 0) window.scrollTo({ top: window.scrollY + top - 16 });
+                // No auto-scroll here: the list is no longer a sticky box, so moving the page
+                // would slide rows under the cursor. A poem that fits the screen is pinned instead.
             }
             if (item.content != null) { body.innerHTML = item.content; return; }
             if (changed) body.textContent = '';
@@ -807,6 +828,19 @@
                 if (featuredId !== item.id) showFeatured(item, true);
             }, 70);
         }
+        // PC: pin the left poem (sticky) only when it fits in the viewport; a taller sticky box would cut it off.
+        function updateLeadPin() {
+            const lead = document.getElementById('featured');
+            if (!lead) return;
+            const fits = window.matchMedia('(min-width: 781px)').matches &&
+                lead.offsetHeight <= window.innerHeight - 48;
+            lead.classList.toggle('pinned', fits);
+        }
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(updateLeadPin).observe(document.getElementById('featured'));
+        }
+        window.addEventListener('resize', updateLeadPin);
+
         function schedulePrefetch() {
             if (!hoverPreviewMQ.matches) return;
             const run = () => prefetchListedBodies();
@@ -857,14 +891,21 @@
                     return;
                 }
 
-                const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+                // Home list shows every isMain post on one page (no pagination); categories paginate.
+                const perPage = cat === 'main' ? Math.max(items.length, 1) : ITEMS_PER_PAGE;
+                const totalPages = Math.ceil(items.length / perPage);
                 if (pageStates[cat] > totalPages) pageStates[cat] = totalPages;
                 const curPage = pageStates[cat] || 1;
-                const offset = (curPage - 1) * ITEMS_PER_PAGE;
-                const pagedItems = items.slice(offset, curPage * ITEMS_PER_PAGE);
+                const offset = (curPage - 1) * perPage;
+                const pagedItems = items.slice(offset, curPage * perPage);
 
-                pagedItems.forEach((item, i) => {
-                    grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item, offset + i + 1));
+                // Category numbers count in upload order: the oldest post (bottom of the list) is 01,
+                // the newest (top) gets the highest number. Numbers come from the full category list,
+                // so a post keeps its number while searching.
+                const fullCat = cat === 'main' ? [] : sorted.filter(p => p.category === cat);
+                const numOf = item => fullCat.length - fullCat.indexOf(item);
+                pagedItems.forEach(item => {
+                    grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item, numOf(item)));
                 });
 
                 if (totalPages > 1 && page) {
