@@ -31,6 +31,9 @@ const OUT_BODIES_DIR = path.join(ROOT, 'poems');
 const OUT_SHARE_DIR = path.join(ROOT, 'p'); // share pages: p/{id}/index.html
 const SITE_SETTINGS_FILE = path.join(ROOT, 'content', 'site.json'); // /admin '호 설정'
 const OUT_SITE_SETTINGS = path.join(ROOT, 'site-settings.js'); // build output (gitignored)
+const SITE_TITLE_FILE = path.join(ROOT, 'content', 'site-title.json'); // /admin '사이트 제목'
+const OUT_HOME_HTML = path.join(ROOT, 'index.html'); // publish = "." → rewritten in place at build
+const DEFAULT_SITE_TITLE = '웹진《시결》';
 const SITE_URL = (process.env.SITE_URL || 'https://sigyeol.com').replace(/\/+$/, '');
 const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png';
 
@@ -310,7 +313,9 @@ function writeOutputs(poems) {
     }
   }
 
-  writeSharePages(poems);
+  const siteTitle = readSiteTitle();
+  applySiteTitleToHome(siteTitle);
+  writeSharePages(poems, siteTitle);
   writeSiteSettings();
 
   return { indexCount: index.length, bodiesDir: OUT_BODIES_DIR };
@@ -327,13 +332,13 @@ function escAttr(s) {
  * home card instead. Readers are sent on by JS (location.replace), with a plain link
  * as the no-JS fallback.
  */
-function sharePageHtml(p) {
+function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE) {
   const id = String(p.id);
   const pageUrl = SITE_URL + '/p/' + encodeURIComponent(id) + '/';
   const appUrl = '/?id=' + encodeURIComponent(id);
   const who = p.author ? p.author : '';
   const ogTitle = p.title + (who ? ' — ' + who : '');
-  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | 웹진《시결》';
+  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | ' + siteTitle;
   const e = escAttr;
   return [
     '<!DOCTYPE html>',
@@ -377,6 +382,45 @@ function sharePageHtml(p) {
  * A separate file (not poems-index.js) so admin/order-autoset.js can keep parsing the index.
  * Only whitelisted string/boolean fields are emitted.
  */
+/** content/site-title.json (/admin '사이트 제목') → title string; empty/missing → default. */
+function readSiteTitle() {
+  if (!fs.existsSync(SITE_TITLE_FILE)) return DEFAULT_SITE_TITLE;
+  let raw;
+  try {
+    raw = JSON.parse(fs.readFileSync(SITE_TITLE_FILE, 'utf8')) || {};
+  } catch (err) {
+    console.error('Invalid JSON:', SITE_TITLE_FILE, err.message);
+    process.exit(1);
+  }
+  const t = typeof raw.siteTitle === 'string' ? raw.siteTitle.replace(/\s+/g, ' ').trim() : '';
+  return t || DEFAULT_SITE_TITLE;
+}
+
+/**
+ * Put the site title into index.html's <title>, og:title and twitter:title so crawlers
+ * (Kakao, X, …) see it without JS. Netlify publishes the repo root, so the file is
+ * rewritten in place; with the default title the file stays byte-identical.
+ */
+function applySiteTitleToHome(siteTitle) {
+  const html = fs.readFileSync(OUT_HOME_HTML, 'utf8');
+  const t = escapeHtml(siteTitle);
+  const a = escAttr(siteTitle);
+  const rules = [
+    [/<title>[^<]*<\/title>/, () => '<title>' + t + '</title>'],
+    [/(<meta property="og:title" content=")[^"]*(">)/, (m, p1, p2) => p1 + a + p2],
+    [/(<meta name="twitter:title" content=")[^"]*(">)/, (m, p1, p2) => p1 + a + p2],
+  ];
+  let out = html;
+  for (const [re, fn] of rules) {
+    if (!re.test(out)) {
+      console.error('index.html: tag not found for site title:', re);
+      process.exit(1);
+    }
+    out = out.replace(re, fn);
+  }
+  if (out !== html) fs.writeFileSync(OUT_HOME_HTML, out, 'utf8');
+}
+
 function writeSiteSettings() {
   let raw = {};
   if (fs.existsSync(SITE_SETTINGS_FILE)) {
@@ -398,12 +442,12 @@ function writeSiteSettings() {
   return settings;
 }
 
-function writeSharePages(poems) {
+function writeSharePages(poems, siteTitle = DEFAULT_SITE_TITLE) {
   fs.rmSync(OUT_SHARE_DIR, { recursive: true, force: true }); // drop pages of deleted poems
   for (const p of poems) {
     const dir = path.join(OUT_SHARE_DIR, String(p.id));
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), sharePageHtml(p), 'utf8');
+    fs.writeFileSync(path.join(dir, 'index.html'), sharePageHtml(p, siteTitle), 'utf8');
   }
 }
 

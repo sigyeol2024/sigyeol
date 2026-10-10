@@ -129,6 +129,27 @@ collections:
             required: false
             hint: "호 제목 아래 작은 글씨 한 줄(선택). 예: 통권 제3호 · 2026년 12월"
 
+  - name: site_title
+    label: 사이트 제목
+    label_singular: 사이트 제목
+    description: "브라우저 탭과 링크 공유 카드(카카오톡·X 등)에 표시되는 사이트 제목을 정합니다. 저장만으로는 사이트에 나가지 않으며, '사이트 발행'을 할 때 함께 반영됩니다."
+    create: false
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: title
+        label: 사이트 제목
+        file: content/site-title.json
+        format: json
+        fields:
+          - label: 사이트 제목
+            name: siteTitle
+            widget: string
+            required: false
+            default: "웹진《시결》"
+            hint: "브라우저 탭과 링크 공유 카드에 표시되는 제목입니다. 비워 두면 '웹진《시결》'로 표시됩니다. 각 시의 공유 카드 설명 끝(… | 웹진《시결》)에도 쓰입니다."
+
   - name: poems_new
     label: 신작시
     label_singular: 글
