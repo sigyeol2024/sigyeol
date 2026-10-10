@@ -29,6 +29,8 @@ const OUT_INDEX = path.join(ROOT, 'poems-index.js');
 const OUT_LEGACY = path.join(ROOT, 'poems.js'); // light index alias
 const OUT_BODIES_DIR = path.join(ROOT, 'poems');
 const OUT_SHARE_DIR = path.join(ROOT, 'p'); // share pages: p/{id}/index.html
+const SITE_SETTINGS_FILE = path.join(ROOT, 'content', 'site.json'); // /admin '호 설정'
+const OUT_SITE_SETTINGS = path.join(ROOT, 'site-settings.js'); // build output (gitignored)
 const SITE_URL = (process.env.SITE_URL || 'https://sigyeol.com').replace(/\/+$/, '');
 const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png';
 
@@ -309,6 +311,7 @@ function writeOutputs(poems) {
   }
 
   writeSharePages(poems);
+  writeSiteSettings();
 
   return { indexCount: index.length, bodiesDir: OUT_BODIES_DIR };
 }
@@ -367,6 +370,32 @@ function sharePageHtml(p) {
     '</html>',
     '',
   ].filter((l) => l !== '').join('\n');
+}
+
+/**
+ * content/site.json (/admin '호 설정') → site-settings.js: `const siteSettings = {...};`
+ * A separate file (not poems-index.js) so admin/order-autoset.js can keep parsing the index.
+ * Only whitelisted string/boolean fields are emitted.
+ */
+function writeSiteSettings() {
+  let raw = {};
+  if (fs.existsSync(SITE_SETTINGS_FILE)) {
+    try {
+      raw = JSON.parse(fs.readFileSync(SITE_SETTINGS_FILE, 'utf8')) || {};
+    } catch (err) {
+      console.error('Invalid JSON:', SITE_SETTINGS_FILE, err.message);
+      process.exit(1);
+    }
+  }
+  const str = (v) => (typeof v === 'string' ? v.trim() : '');
+  const settings = {
+    showIssue: raw.showIssue !== false && !!str(raw.issueTitle),
+    issueTitle: str(raw.issueTitle),
+    issueSubtitle: str(raw.issueSubtitle),
+  };
+  const js = 'const siteSettings = ' + JSON.stringify(settings, null, 2).replace(/</g, '\\u003c') + ';\n';
+  fs.writeFileSync(OUT_SITE_SETTINGS, js, 'utf8');
+  return settings;
 }
 
 function writeSharePages(poems) {

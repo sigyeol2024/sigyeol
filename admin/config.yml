@@ -100,6 +100,35 @@ collections:
             required: false
             hint: "무엇을 발행하는지 적어 두면 나중에 기록을 보기 편합니다."
 
+  - name: site_settings
+    label: 호 설정
+    label_singular: 호 설정
+    description: "메인 페이지 오른쪽 목록 맨 위에 보이는 이번 호 제목(예: 2026 겨울호)을 정합니다. 저장만으로는 사이트에 나가지 않으며, '사이트 발행'을 할 때 함께 반영됩니다."
+    create: false
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: issue
+        label: 이번 호 표시
+        file: content/site.json
+        format: json
+        fields:
+          - label: 표시
+            name: showIssue
+            widget: boolean
+            default: true
+            hint: "끄면 메인 목록 위의 호 제목을 숨깁니다(값은 그대로 남습니다)."
+          - label: 호 제목
+            name: issueTitle
+            widget: string
+            hint: "메인 목록 맨 위에 크게 보입니다. 예: 2026 겨울호"
+          - label: 보조 문구
+            name: issueSubtitle
+            widget: string
+            required: false
+            hint: "호 제목 아래 작은 글씨 한 줄(선택). 예: 통권 제3호 · 2026년 12월"
+
   - name: poems_new
     label: 신작시
     label_singular: 글
