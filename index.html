@@ -538,11 +538,26 @@
                 gap: 36px;
                 padding-top: 24px;
             }
-            .lead {
-                border-right: none;
-                padding-right: 0;
+            /* Mobile home: no random poem preview — just the INDEX list (PC is unchanged). */
+            .lead { display: none; }
+            .spread { gap: 0; padding-top: 4px; }
+            .side-col { padding-top: 0; }
+            .toc-list { border-top: none; } /* the masthead rule already opens the list */
+            /* Mobile INDEX rows: larger and bolder than PC, roomy tap targets, folio rules kept */
+            .toc-item { padding: 20px 2px 19px; }
+            .toc-cat { font-size: 0.7rem; letter-spacing: 0.16em; margin-bottom: 7px; }
+            .toc-title {
+                font-size: 1.34rem;
+                font-weight: 600;
+                line-height: 1.38;
+                letter-spacing: -0.01em;
+                word-break: keep-all;
+                overflow-wrap: break-word;
             }
-            .lead-title { font-size: 1.55rem; }
+            .toc-author { font-size: 0.95rem; margin-top: 7px; letter-spacing: 0.06em; }
+            /* No preview on mobile, so no "current" highlight; keep a tap feedback instead */
+            .toc-item.current .toc-title { color: inherit; }
+            .toc-item:active .toc-title { color: var(--accent); }
             .section-header { padding-top: 24px; }
             .idx-row {
                 grid-template-columns: 2.4rem 1fr;
@@ -817,6 +832,8 @@
             return pool[Math.floor(Math.random() * pool.length)];
         }
 
+        // The left preview exists only on the PC layout (the CSS hides .lead at ≤780px).
+        const leadMQ = window.matchMedia('(min-width: 781px)');
         let featuredItem = pickRandomFeatured();
         let featuredId = null;      // id currently rendered on the left
         let featuredToken = 0;      // only the latest request may render (hover races)
@@ -850,6 +867,8 @@
             }
             if (item.content != null) { body.innerHTML = item.content; return; }
             if (changed) body.textContent = '';
+            // Mobile hides the preview: don't download its body until the layout becomes PC (see leadMQ).
+            if (!leadMQ.matches) return;
             ensurePoemBody(item.id).then(loaded => {
                 if (token !== featuredToken || !loaded) return; // a newer hover won
                 body.innerHTML = loaded.content || '';
@@ -887,6 +906,10 @@
             new ResizeObserver(updateLeadPin).observe(document.getElementById('featured'));
         }
         window.addEventListener('resize', updateLeadPin);
+        // Mobile → PC (rotate/resize): fill in the preview body that was skipped on mobile.
+        leadMQ.addEventListener('change', e => {
+            if (e.matches && featuredItem) showFeatured(featuredItem, false);
+        });
 
         function schedulePrefetch() {
             if (!hoverPreviewMQ.matches) return;
