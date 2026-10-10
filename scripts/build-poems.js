@@ -333,7 +333,7 @@ function sharePageHtml(p) {
   const appUrl = '/?id=' + encodeURIComponent(id);
   const who = p.author ? p.author : '';
   const ogTitle = p.title + (who ? ' — ' + who : '');
-  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | 시 웹진 《시결》';
+  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | 웹진《시결》';
   const e = escAttr;
   return [
     '<!DOCTYPE html>',
