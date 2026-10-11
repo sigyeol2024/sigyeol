@@ -35,7 +35,7 @@ const SITE_TITLE_FILE = path.join(ROOT, 'content', 'site-title.json'); // /admin
 const OUT_HOME_HTML = path.join(ROOT, 'index.html'); // publish = "." → rewritten in place at build
 const DEFAULT_SITE_TITLE = '웹진《시결》';
 const SITE_URL = (process.env.SITE_URL || 'https://sigyeol.com').replace(/\/+$/, '');
-const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png';
+const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png?v=20261011';
 
 function escapeHtml(s) {
   return String(s)
