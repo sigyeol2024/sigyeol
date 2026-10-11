@@ -167,6 +167,28 @@ Netlify 무료 플랜은 **배포 1번에 15크레딧**(월 300크레딧 = 약 2
 
 저장 후 Netlify 빌드가 `content/poems/*.json` → `poems-index.js`(메타) + `poems/{id}.json`(본문)으로 나눕니다. HTML 본문은 사이트 역사적 형식(`<div style="text-align: …">` + 줄마다 `<div>`)에 맞춰 그대로 쓰입니다. 사이트가 처음에는 인덱스만 받고, 시를 열 때 본문 JSON을 가져옵니다.
 
+## 검색엔진 (네이버 서치어드바이저 · 구글 서치 콘솔)
+
+빌드할 때마다 자동으로 만들어집니다(저장소에는 올리지 않음):
+
+- `https://sigyeol.com/sitemap.xml` — 처음 화면 + 모든 글(공지 포함)의 `/p/{id}/` 주소, 수정일 포함
+- `https://sigyeol.com/robots.txt` — 전체 허용, `/admin/`만 제외, 사이트맵 주소 안내
+- `/p/{id}/` — 글마다 제목·시인·분류·**시 전문**이 HTML로 들어 있는 페이지(검색엔진용). 사람이 열면 곧바로 `/?id={id}` 화면으로 넘어갑니다.
+
+두 서비스에 사이트를 등록한 뒤 **사이트맵 제출**에 `https://sigyeol.com/sitemap.xml`을 넣으면 됩니다.
+
+### 소유 확인
+
+방법 1 — **HTML 태그**: 저장소에 `content/verification.json`을 만들고 각 서비스가 준 `content` 값만 넣습니다(필요한 것만 써도 됩니다).
+
+```json
+{ "naver": "네이버가 준 값", "google": "구글이 준 값" }
+```
+
+커밋 메시지에 `[배포]`를 넣어 올리면 빌드가 `index.html` 머리에 `naver-site-verification` / `google-site-verification` 메타 태그를 넣습니다.
+
+방법 2 — **HTML 파일**: 서비스가 주는 확인용 파일(예: `naverXXXX.html`, `googleXXXX.html`)을 저장소 맨 위 폴더에 그대로 올리고 `[배포]`로 배포합니다.
+
 ## 로컬에서 데이터만 다시 만들기
 
 ```bash

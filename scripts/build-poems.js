@@ -36,6 +36,10 @@ const OUT_HOME_HTML = path.join(ROOT, 'index.html'); // publish = "." → rewrit
 const DEFAULT_SITE_TITLE = '웹진《시결》';
 const SITE_URL = (process.env.SITE_URL || 'https://sigyeol.com').replace(/\/+$/, '');
 const OG_IMAGE = SITE_URL + '/static/og/sigyeol-og.png?v=20261011';
+const OUT_SITEMAP = path.join(ROOT, 'sitemap.xml'); // build output (gitignored)
+const OUT_ROBOTS = path.join(ROOT, 'robots.txt'); // build output (gitignored)
+// Optional search-engine ownership tags: {"naver": "<content>", "google": "<content>"} (see CMS.md)
+const VERIFICATION_FILE = path.join(ROOT, 'content', 'verification.json');
 
 function escapeHtml(s) {
   return String(s)
@@ -315,7 +319,11 @@ function writeOutputs(poems) {
 
   const siteTitle = readSiteTitle();
   applySiteTitleToHome(siteTitle);
-  writeSharePages(poems, siteTitle);
+  applyHomePoemLinks(poems);
+  applyVerificationTags();
+  writeSharePages(poems, siteTitle, readAnalyticsSnippet());
+  writeSitemap(poems);
+  writeRobots();
   writeSiteSettings();
 
   return { indexCount: index.length, bodiesDir: OUT_BODIES_DIR };
@@ -326,34 +334,104 @@ function escAttr(s) {
   return escapeHtml(s).replace(/'/g, '&#39;');
 }
 
+/** Poem HTML (from the editor) → plain text lines; blank line = stanza break. */
+function poemTextLines(html) {
+  const text = String(html || '')
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(div|p|h[1-6]|li|blockquote)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0*39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (m, n) => String.fromCodePoint(Number(n)))
+    .replace(/&amp;/g, '&');
+  const lines = text.split('\n').map((l) => l.replace(/[ \t\u00a0]+/g, ' ').trim());
+  while (lines.length && !lines[0]) lines.shift();
+  while (lines.length && !lines[lines.length - 1]) lines.pop();
+  return lines.filter((l, i) => l || lines[i - 1]); // collapse runs of blank lines
+}
+
+/** Plain-text excerpt (first lines of the poem) for meta description, ~80–120 chars. */
+function poemExcerpt(lines, max = 110) {
+  let out = '';
+  for (const l of lines) {
+    if (!l) continue;
+    const next = out ? out + ' / ' + l : l;
+    if (next.length > max) {
+      if (out.length >= 60) break;
+      const cut = next.slice(0, max);
+      const sp = cut.lastIndexOf(' ');
+      return (sp > 60 ? cut.slice(0, sp) : cut).replace(/[\s/·,.]+$/, '') + '…';
+    }
+    out = next;
+    if (out.length >= 80) break;
+  }
+  return out;
+}
+
+/** Lines → stanzas (<p>) with <br> between lines; all text escaped. */
+function poemBodyHtml(lines) {
+  const stanzas = [];
+  let cur = [];
+  for (const l of lines) {
+    if (l) cur.push(escapeHtml(l));
+    else if (cur.length) { stanzas.push(cur); cur = []; }
+  }
+  if (cur.length) stanzas.push(cur);
+  return stanzas.map((st) => '<p>' + st.join('<br>\n') + '</p>').join('\n');
+}
+
+/** The Cloudflare Web Analytics snippet, reused verbatim from index.html (one source of truth). */
+function readAnalyticsSnippet() {
+  const html = fs.readFileSync(OUT_HOME_HTML, 'utf8');
+  const m = html.match(/<!-- Cloudflare Web Analytics -->[\s\S]*?<!-- End Cloudflare Web Analytics -->/);
+  return m ? m[0] : '';
+}
+
 /**
- * p/{id}/index.html — static page whose <head> carries the poem's share card.
- * No meta refresh on purpose: some crawlers follow it and would read the generic
- * home card instead. Readers are sent on by JS (location.replace), with a plain link
- * as the no-JS fallback.
+ * p/{id}/index.html — the crawlable page of one poem (sitemap URL, share-card URL).
+ * Carries the full poem as real HTML (Naver and other crawlers don't run JS), its own
+ * canonical, title, description and share card. Readers with JS are sent on to the site
+ * (/?id=…) at once; the SPA then points its canonical back here (see setPageMeta in index.html).
  */
-function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE) {
+function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE, analytics = '') {
   const id = String(p.id);
   const pageUrl = SITE_URL + '/p/' + encodeURIComponent(id) + '/';
   const appUrl = '/?id=' + encodeURIComponent(id);
   const who = p.author ? p.author : '';
   const ogTitle = p.title + (who ? ' — ' + who : '');
-  const desc = [who, p.category].filter(Boolean).join(' · ') + ' | ' + siteTitle;
+  const cardDesc = [who, p.category].filter(Boolean).join(' · ') + ' | ' + siteTitle;
+  const lines = poemTextLines(p.content);
+  const excerpt = poemExcerpt(lines) || cardDesc;
   const e = escAttr;
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': p.category === '공지사항' ? 'Article' : 'CreativeWork',
+    name: p.title,
+    headline: p.title,
+    genre: p.category,
+    inLanguage: 'ko',
+    url: pageUrl,
+    isPartOf: { '@type': 'Periodical', name: siteTitle, url: SITE_URL + '/' },
+  };
+  if (who) ld.author = { '@type': 'Person', name: who };
   return [
     '<!DOCTYPE html>',
     '<html lang="ko">',
     '<head>',
     '<meta charset="UTF-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-    '<title>' + escapeHtml(ogTitle) + ' | 시결</title>',
-    '<meta name="description" content="' + e(desc) + '">',
+    '<title>' + escapeHtml(ogTitle + ' | ' + siteTitle) + '</title>',
+    '<meta name="description" content="' + e(excerpt) + '">',
     '<link rel="canonical" href="' + e(pageUrl) + '">',
     '<meta property="og:type" content="article">',
     '<meta property="og:site_name" content="시결">',
     '<meta property="og:locale" content="ko_KR">',
     '<meta property="og:title" content="' + e(ogTitle) + '">',
-    '<meta property="og:description" content="' + e(desc) + '">',
+    '<meta property="og:description" content="' + e(cardDesc) + '">',
     '<meta property="og:url" content="' + e(pageUrl) + '">',
     '<meta property="og:image" content="' + e(OG_IMAGE) + '">',
     '<meta property="og:image:width" content="1200">',
@@ -362,26 +440,148 @@ function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE) {
     who ? '<meta property="article:author" content="' + e(who) + '">' : '',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:title" content="' + e(ogTitle) + '">',
-    '<meta name="twitter:description" content="' + e(desc) + '">',
+    '<meta name="twitter:description" content="' + e(cardDesc) + '">',
     '<meta name="twitter:image" content="' + e(OG_IMAGE) + '">',
     '<link rel="icon" href="/favicon.ico" sizes="any">',
     '<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">',
+    '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, '\\u003c') + '</script>',
     '<script>location.replace(' + JSON.stringify(appUrl).replace(/</g, '\\u003c') + ');</script>',
-    '<style>body{margin:0;background:#f3efe8;color:#141312;font-family:"Noto Serif KR",serif;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center}a{color:#2f6b4f}</style>',
+    '<style>',
+    'body{margin:0;background:#f3efe8;color:#141312;font-family:"Noto Serif KR","Nanum Myeongjo",serif;line-height:1.9;word-break:keep-all}',
+    '.wrap{max-width:640px;margin:0 auto;padding:28px 24px 64px}',
+    'header{border-bottom:2px solid #1a1917;padding-bottom:12px;margin-bottom:36px}',
+    'header a{color:#2f6b4f;text-decoration:none;font-size:1.5rem;letter-spacing:.08em}',
+    '.cat{color:#2f6b4f;font-size:.8rem;letter-spacing:.12em;margin:0}',
+    'h1{font-size:1.9rem;font-weight:600;line-height:1.35;margin:.2em 0 .1em}',
+    '.poet{color:#6a655d;margin:0 0 2rem}',
+    '.poem p{margin:0 0 1.5em}',
+    '.more{margin-top:2.5rem;border-top:1px solid #cfc7bb;padding-top:1rem}',
+    'a{color:#2f6b4f}',
+    '</style>',
     '</head>',
     '<body>',
-    '<p>' + escapeHtml(ogTitle) + '<br><a href="' + e(appUrl) + '">시결에서 읽기</a></p>',
+    '<div class="wrap">',
+    '<header><a href="/">시결</a></header>',
+    '<main>',
+    '<article>',
+    '<p class="cat">' + escapeHtml(p.category) + '</p>',
+    '<h1>' + escapeHtml(p.title) + '</h1>',
+    who ? '<p class="poet">' + escapeHtml(who) + '</p>' : '',
+    '<div class="poem">',
+    poemBodyHtml(lines),
+    '</div>',
+    '</article>',
+    '<p class="more"><a href="' + e(appUrl) + '">' + escapeHtml(siteTitle) + '에서 읽기</a> · <a href="/">처음으로</a></p>',
+    '</main>',
+    '</div>',
+    analytics,
     '</body>',
     '</html>',
     '',
   ].filter((l) => l !== '').join('\n');
 }
 
+/* ---------- Search engines: sitemap.xml, robots.txt, home links, verification ---------- */
+
+/** Last commit date (ISO) of a path, or null when git history isn't usable (no git / shallow clone). */
+let GIT_OK = null;
+function gitLastmod(relPath) {
+  const { execFileSync } = require('child_process');
+  if (GIT_OK === null) {
+    try {
+      GIT_OK = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: ROOT, encoding: 'utf8' }).trim() === 'false';
+    } catch (err) {
+      GIT_OK = false;
+    }
+  }
+  if (!GIT_OK) return null;
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', relPath], { cwd: ROOT, encoding: 'utf8' }).trim();
+    return out || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function xmlEsc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+/** sitemap.xml: home + every post's crawlable page /p/{id}/ (poems and notices). */
+function writeSitemap(poems) {
+  const urls = [];
+  let newest = null;
+  for (const p of poems) {
+    const lm = gitLastmod(path.join('content', 'poems', String(p.id) + '.json'));
+    if (lm && (!newest || lm > newest)) newest = lm;
+    urls.push({ loc: SITE_URL + '/p/' + encodeURIComponent(String(p.id)) + '/', lastmod: lm });
+  }
+  urls.unshift({ loc: SITE_URL + '/', lastmod: newest });
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...urls.map((u) => '  <url><loc>' + xmlEsc(u.loc) + '</loc>' + (u.lastmod ? '<lastmod>' + u.lastmod + '</lastmod>' : '') + '</url>'),
+    '</urlset>',
+    '',
+  ].join('\n');
+  fs.writeFileSync(OUT_SITEMAP, xml, 'utf8');
+}
+
+function writeRobots() {
+  fs.writeFileSync(
+    OUT_ROBOTS,
+    ['User-agent: *', 'Allow: /', 'Disallow: /admin/', '', 'Sitemap: ' + SITE_URL + '/sitemap.xml', ''].join('\n'),
+    'utf8'
+  );
+}
+
 /**
- * content/site.json (/admin '호 설정') → site-settings.js: `const siteSettings = {...};`
- * A separate file (not poems-index.js) so admin/order-autoset.js can keep parsing the index.
- * Only whitelisted string/boolean fields are emitted.
+ * index.html: the <noscript> list of main-page poems (links to /p/{id}/) between
+ * <!-- poem-links:start --> and <!-- poem-links:end -->, so crawlers without JS find them.
  */
+function applyHomePoemLinks(poems) {
+  const html = fs.readFileSync(OUT_HOME_HTML, 'utf8');
+  const re = /(<!-- poem-links:start -->)[\s\S]*?(<!-- poem-links:end -->)/;
+  if (!re.test(html)) return;
+  const main = poems
+    .filter((p) => p.isMain)
+    .sort((a, b) => {
+      const ao = a.mainOrder == null ? Infinity : a.mainOrder;
+      const bo = b.mainOrder == null ? Infinity : b.mainOrder;
+      return ao !== bo ? ao - bo : Number(b.id) - Number(a.id);
+    });
+  const items = main
+    .map((p) => '<li><a href="/p/' + encodeURIComponent(String(p.id)) + '/">' + escapeHtml(p.title) + '</a>' + (p.author ? ' — ' + escapeHtml(p.author) : '') + '</li>')
+    .join('\n            ');
+  const block = '\n        <noscript>\n          <ul class="noscript-list">\n            ' + items + '\n          </ul>\n        </noscript>\n        ';
+  const out = html.replace(re, (m, a, b) => a + block + b);
+  if (out !== html) fs.writeFileSync(OUT_HOME_HTML, out, 'utf8');
+}
+
+/**
+ * content/verification.json (optional) → <meta name="naver-site-verification"> /
+ * <meta name="google-site-verification"> in index.html's <head>. Without the file nothing is touched.
+ */
+function applyVerificationTags() {
+  if (!fs.existsSync(VERIFICATION_FILE)) return;
+  let cfg;
+  try {
+    cfg = JSON.parse(fs.readFileSync(VERIFICATION_FILE, 'utf8')) || {};
+  } catch (err) {
+    console.error('Invalid JSON:', VERIFICATION_FILE, err.message);
+    process.exit(1);
+  }
+  const html = fs.readFileSync(OUT_HOME_HTML, 'utf8');
+  let out = html.replace(/\n[ \t]*<meta name="(naver|google)-site-verification"[^>]*>/g, '');
+  const tags = [];
+  for (const [key, name] of [['naver', 'naver-site-verification'], ['google', 'google-site-verification']]) {
+    const v = typeof cfg[key] === 'string' ? cfg[key].trim() : '';
+    if (v) tags.push('    <meta name="' + name + '" content="' + escAttr(v) + '">');
+  }
+  if (tags.length) out = out.replace(/(\n[ \t]*<meta name="robots"[^>]*>)/, '$1\n' + tags.join('\n'));
+  if (out !== html) fs.writeFileSync(OUT_HOME_HTML, out, 'utf8');
+}
+
 /** content/site-title.json (/admin '사이트 제목') → title string; empty/missing → default. */
 function readSiteTitle() {
   if (!fs.existsSync(SITE_TITLE_FILE)) return DEFAULT_SITE_TITLE;
@@ -442,12 +642,12 @@ function writeSiteSettings() {
   return settings;
 }
 
-function writeSharePages(poems, siteTitle = DEFAULT_SITE_TITLE) {
+function writeSharePages(poems, siteTitle = DEFAULT_SITE_TITLE, analytics = '') {
   fs.rmSync(OUT_SHARE_DIR, { recursive: true, force: true }); // drop pages of deleted poems
   for (const p of poems) {
     const dir = path.join(OUT_SHARE_DIR, String(p.id));
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), sharePageHtml(p, siteTitle), 'utf8');
+    fs.writeFileSync(path.join(dir, 'index.html'), sharePageHtml(p, siteTitle, analytics), 'utf8');
   }
 }
 
