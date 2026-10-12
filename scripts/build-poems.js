@@ -354,24 +354,6 @@ function poemTextLines(html) {
   return lines.filter((l, i) => l || lines[i - 1]); // collapse runs of blank lines
 }
 
-/** Plain-text excerpt (first lines of the poem) for meta description, ~80–120 chars. */
-function poemExcerpt(lines, max = 110) {
-  let out = '';
-  for (const l of lines) {
-    if (!l) continue;
-    const next = out ? out + ' / ' + l : l;
-    if (next.length > max) {
-      if (out.length >= 60) break;
-      const cut = next.slice(0, max);
-      const sp = cut.lastIndexOf(' ');
-      return (sp > 60 ? cut.slice(0, sp) : cut).replace(/[\s/·,.]+$/, '') + '…';
-    }
-    out = next;
-    if (out.length >= 80) break;
-  }
-  return out;
-}
-
 /** Lines → stanzas (<p>) with <br> between lines; all text escaped. */
 function poemBodyHtml(lines) {
   const stanzas = [];
@@ -394,7 +376,7 @@ function readAnalyticsSnippet() {
 /**
  * p/{id}/index.html — the crawlable page of one poem (sitemap URL, share-card URL).
  * Carries the full poem as real HTML (Naver and other crawlers don't run JS), its own
- * canonical, title, description and share card. Readers with JS are sent on to the site
+ * canonical, title and share card. Readers with JS are sent on to the site
  * (/?id=…) at once; the SPA then points its canonical back here (see setPageMeta in index.html).
  */
 function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE, analytics = '') {
@@ -403,9 +385,7 @@ function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE, analytics = '') {
   const appUrl = '/?id=' + encodeURIComponent(id);
   const who = p.author ? p.author : '';
   const ogTitle = p.title + (who ? ' — ' + who : '');
-  const cardDesc = [who, p.category].filter(Boolean).join(' · ') + ' | ' + siteTitle;
   const lines = poemTextLines(p.content);
-  const excerpt = poemExcerpt(lines) || cardDesc;
   const e = escAttr;
   const ld = {
     '@context': 'https://schema.org',
@@ -425,22 +405,19 @@ function sharePageHtml(p, siteTitle = DEFAULT_SITE_TITLE, analytics = '') {
     '<meta charset="UTF-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
     '<title>' + escapeHtml(ogTitle + ' | ' + siteTitle) + '</title>',
-    '<meta name="description" content="' + e(excerpt) + '">',
     '<link rel="canonical" href="' + e(pageUrl) + '">',
     '<meta property="og:type" content="article">',
     '<meta property="og:site_name" content="시결">',
     '<meta property="og:locale" content="ko_KR">',
     '<meta property="og:title" content="' + e(ogTitle) + '">',
-    '<meta property="og:description" content="' + e(cardDesc) + '">',
     '<meta property="og:url" content="' + e(pageUrl) + '">',
     '<meta property="og:image" content="' + e(OG_IMAGE) + '">',
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
-    '<meta property="og:image:alt" content="시결 POETRY WEBZINE 로고">',
+    '<meta property="og:image:alt" content="웹진《시결》 로고">',
     who ? '<meta property="article:author" content="' + e(who) + '">' : '',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:title" content="' + e(ogTitle) + '">',
-    '<meta name="twitter:description" content="' + e(cardDesc) + '">',
     '<meta name="twitter:image" content="' + e(OG_IMAGE) + '">',
     '<link rel="icon" href="/favicon.ico" sizes="any">',
     '<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">',
