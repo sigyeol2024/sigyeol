@@ -320,17 +320,12 @@
 
         .idx-row {
             display: grid;
-            grid-template-columns: 3.2rem 1fr auto;
+            grid-template-columns: 1fr auto;
             align-items: baseline;
-            gap: 0 20px;
+            gap: 0 24px;
             padding: 18px 0;
             border-bottom: 1px solid var(--hair);
             cursor: pointer;
-        }
-        .idx-num {
-            font-size: 0.68rem;
-            letter-spacing: 0.14em;
-            color: var(--muted);
         }
         .idx-title {
             font-family: var(--serif);
@@ -591,11 +586,11 @@
             .toc-item:active .toc-title { color: var(--accent); }
             .section-header { padding-top: 24px; }
             .idx-row {
-                grid-template-columns: 2.4rem 1fr;
-                gap: 2px 12px;
+                grid-template-columns: 1fr;
+                gap: 4px 0;
                 padding: 14px 0;
             }
-            .idx-author { grid-column: 2; text-align: left; }
+            .idx-author { text-align: left; }
             .idx-title { font-size: 1.08rem; }
             .search-container { gap: 10px; }
             .poem-detail-container { padding-top: 28px; }
@@ -884,10 +879,9 @@
             a.addEventListener('mouseenter', () => onRowHover(item));
             return a;
         }
-        // Category page row: number / title / poet
-        function makeIdxRow(item, num) {
+        // Category page row: title / poet
+        function makeIdxRow(item) {
             const a = el('a', 'idx-row');
-            a.appendChild(el('span', 'idx-num', String(num).padStart(2, '0')));
             a.appendChild(el('span', 'idx-title', item.title));
             a.appendChild(el('span', 'idx-author', item.author));
             bindOpen(a, item.id);
@@ -1033,13 +1027,8 @@
                 const offset = (curPage - 1) * perPage;
                 const pagedItems = items.slice(offset, curPage * perPage);
 
-                // Category numbers count in upload order: the oldest post (bottom of the list) is 01,
-                // the newest (top) gets the highest number. Numbers come from the full category list,
-                // so a post keeps its number while searching.
-                const fullCat = cat === 'main' ? [] : sorted.filter(p => p.category === cat);
-                const numOf = item => fullCat.length - fullCat.indexOf(item);
                 pagedItems.forEach(item => {
-                    grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item, numOf(item)));
+                    grid.appendChild(cat === 'main' ? makeTocItem(item) : makeIdxRow(item));
                 });
 
                 if (totalPages > 1 && page) {
