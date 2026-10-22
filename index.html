@@ -317,13 +317,6 @@
             line-height: 1.2;
             letter-spacing: -0.02em;
         }
-        .section-count {
-            font-size: 0.68rem;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            padding-bottom: 6px;
-            white-space: nowrap;
-        }
 
         .idx-row {
             display: grid;
@@ -697,9 +690,9 @@
         </section>
 
         <!-- Category pages -->
-        <section id="section-new-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신작시</h1></div><div class="section-count" id="count-new-poems"></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
-        <section id="section-rookie-award" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신인상</h1></div><div class="section-count" id="count-rookie-award"></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
-        <section id="section-notice" class="page-section"><div class="section-header"><div><h1 class="section-header-title">공지사항</h1></div><div class="section-count" id="count-notice"></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
+        <section id="section-new-poems" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신작시</h1></div></div><div id="grid-new-poems" class="poetry-grid idx-list"></div><div id="pagination-new-poems" class="pagination"></div></section>
+        <section id="section-rookie-award" class="page-section"><div class="section-header"><div><h1 class="section-header-title">신인상</h1></div></div><div id="grid-rookie-award" class="poetry-grid idx-list"></div><div id="pagination-rookie-award" class="pagination"></div></section>
+        <section id="section-notice" class="page-section"><div class="section-header"><div><h1 class="section-header-title">공지사항</h1></div></div><div id="grid-notice" class="poetry-grid idx-list"></div><div id="pagination-notice" class="pagination"></div></section>
 
         <!-- Reading view -->
         <section id="section-poem-detail" class="page-section">
@@ -1020,15 +1013,6 @@
 
                 // Home list: only posts flagged '메인 페이지 노출' (isMain), ordered by '메인 페이지 노출 순서' (mainOrder).
                 const items = cat === 'main' ? getMainListPoems(sorted) : filtered.filter(p => p.category === cat);
-
-                if (cat !== 'main') {
-                    const total = sorted.filter(p => p.category === cat).length;
-                    const countEl = document.getElementById('count-' + SECTION_IDS[cat]);
-                    if (countEl) {
-                        const unit = cat === '공지사항' ? '건' : '편';
-                        countEl.textContent = kw ? (items.length + ' / ' + total + unit) : (total ? total + unit : '');
-                    }
-                }
 
                 if (items.length === 0) {
                     if (cat === 'main') {
