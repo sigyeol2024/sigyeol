@@ -351,52 +351,69 @@
             font-style: italic;
         }
 
-        /* ---- Search (quiet) ---- */
+        /* ---- Search (quiet): one hairline field, serif, no boxes ---- */
         .search-container {
             display: none;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--hair);
+            padding: 22px 0 8px;
         }
-        .search-container.active { display: flex; }
-        .search-select,
-        .search-input {
-            border: none;
+        .search-container.active { display: block; }
+        .search-field {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            max-width: 440px;
+            padding-bottom: 5px;
             border-bottom: 1px solid var(--hair);
-            background: transparent;
-            color: var(--ink);
-            font-family: inherit;
-            font-size: 0.78rem;
-            letter-spacing: 0.04em;
-            padding: 6px 2px;
-            outline: none;
-            border-radius: 0;
             transition: border-color var(--transition);
         }
-        .search-select { color: var(--muted); cursor: pointer; }
-        .search-select option { background: var(--paper); color: var(--ink); }
-        .search-select:focus,
-        .search-input:focus { border-bottom-color: var(--ink); }
-        .search-input-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-            max-width: 420px;
-        }
-        .search-input { width: 100%; min-width: 0; }
-        .search-input::placeholder { color: var(--muted); opacity: 0.8; }
+        .search-field:focus-within { border-bottom-color: var(--muted); }
+        .search-select,
+        .search-input,
         .search-btn {
-            font-size: 0.7rem;
-            letter-spacing: 0.14em;
-            color: var(--muted);
-            border-bottom: 1px solid var(--muted);
-            padding-bottom: 1px;
-            white-space: nowrap;
+            font-family: var(--serif);
+            letter-spacing: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            outline: none;
+            box-shadow: none;
         }
-        .search-btn:hover { border-bottom-color: var(--accent); }
+        .search-select {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: none;
+            font-size: 0.84rem;
+            color: var(--muted);
+            padding: 2px 14px 2px 0;
+            margin: 0;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'%3E%3Cpath d='M.5.5l3 3 3-3' fill='none' stroke='%236a655d' stroke-width='.9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 2px center;
+            transition: color var(--transition);
+        }
+        .search-select:hover,
+        .search-select:focus-visible { color: var(--ink); }
+        .search-select option { background: var(--paper); color: var(--ink); font-family: var(--serif); }
+        .search-input {
+            flex: 1;
+            min-width: 0;
+            font-size: 0.98rem;
+            color: var(--ink);
+            padding: 2px 0;
+        }
+        .search-input::placeholder { color: var(--muted); opacity: 0.62; }
+        .search-input::-webkit-search-cancel-button { display: none; }
+        .search-btn {
+            flex: none;
+            font-size: 0.88rem;
+            color: var(--muted);
+            padding: 2px 0 2px 2px;
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+        .search-btn:hover,
+        .search-btn:focus-visible { color: var(--accent); }
 
         /* ---- Pagination (text) ---- */
         .pagination {
@@ -592,7 +609,9 @@
             }
             .idx-author { text-align: left; }
             .idx-title { font-size: 1.08rem; }
-            .search-container { gap: 10px; }
+            .search-container { padding-top: 18px; }
+            .search-field { max-width: none; gap: 12px; }
+            .search-input { font-size: 1rem; }
             .poem-detail-container { padding-top: 28px; }
             .poem-detail-title { font-size: 1.75rem; }
             .poem-detail-content { font-size: 1rem; line-height: 1.9; }
@@ -628,16 +647,16 @@
     </header>
 
     <main>
-        <div id="search-container" class="search-container">
-            <select id="search-type" class="search-select" aria-label="검색 범위" autocomplete="off">
-                <option value="all">전체검색</option>
-                <option value="title">제목</option>
-                <option value="author">작가명</option>
-                <option value="content">본문</option>
-            </select>
-            <div class="search-input-wrapper">
-                <input type="text" id="search-keyword" class="search-input" placeholder="검색어" aria-label="검색어" autocomplete="off" onkeyup="if(event.key==='Enter') handleSearch()">
-                <button class="text-btn search-btn" onclick="handleSearch()">검색</button>
+        <div id="search-container" class="search-container" role="search">
+            <div class="search-field">
+                <select id="search-type" class="search-select" aria-label="검색 범위" autocomplete="off" onchange="document.getElementById('search-keyword').placeholder = this.value === 'content' ? '본문 속 한 구절' : this.value === 'author' ? '시인 이름' : this.value === 'title' ? '시 제목' : '시 제목이나 시인 이름'">
+                    <option value="all">전체</option>
+                    <option value="title">제목</option>
+                    <option value="author">시인</option>
+                    <option value="content">본문</option>
+                </select>
+                <input type="text" id="search-keyword" class="search-input" placeholder="시 제목이나 시인 이름" aria-label="검색어" autocomplete="off" enterkeyhint="search" onkeyup="if(event.key==='Enter') handleSearch()">
+                <button type="button" class="search-btn" onclick="handleSearch()">찾기</button>
             </div>
         </div>
 
@@ -1098,7 +1117,7 @@
         function resetSearch() {
             const kwEl = document.getElementById('search-keyword');
             const typeEl = document.getElementById('search-type');
-            if (kwEl) kwEl.value = '';
+            if (kwEl) { kwEl.value = ''; kwEl.placeholder = '시 제목이나 시인 이름'; }
             if (typeEl) typeEl.value = 'all';
         }
 
