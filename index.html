@@ -37,6 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 작가 이름: 마루 부리 (Naver, SIL OFL 1.1, 상업적 무료) -->
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/maru-buri.css" rel="stylesheet">
 
     <style>
         /* ========== Folio palette ========== */
@@ -623,6 +625,12 @@
         @media (max-width: 400px) {
             .site-logo { --u: 0.00299rem; }
         }
+    </style>
+    <style>
+        .toc-author, .idx-author { font-family: 'MaruBuri', var(--serif); font-weight: 400; color: #5f5a52; letter-spacing: 0.04em; }
+        .toc-author { font-size: 0.78rem; }
+        .idx-author { font-size: 0.83rem; }
+        @media (max-width: 768px) { .toc-author { font-size: 0.9rem; } .idx-author { font-size: 0.88rem; } }
     </style>
 </head>
 <body>
