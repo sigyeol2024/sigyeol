@@ -649,13 +649,13 @@
     <main>
         <div id="search-container" class="search-container" role="search">
             <div class="search-field">
-                <select id="search-type" class="search-select" aria-label="검색 범위" autocomplete="off" onchange="document.getElementById('search-keyword').placeholder = this.value === 'content' ? '본문 속 한 구절' : this.value === 'author' ? '시인 이름' : this.value === 'title' ? '시 제목' : '시 제목이나 시인 이름'">
+                <select id="search-type" class="search-select" aria-label="검색 범위" autocomplete="off">
                     <option value="all">전체</option>
                     <option value="title">제목</option>
-                    <option value="author">시인</option>
+                    <option value="author">작가</option>
                     <option value="content">본문</option>
                 </select>
-                <input type="text" id="search-keyword" class="search-input" placeholder="시 제목이나 시인 이름" aria-label="검색어" autocomplete="off" enterkeyhint="search" onkeyup="if(event.key==='Enter') handleSearch()">
+                <input type="text" id="search-keyword" class="search-input" aria-label="검색어" autocomplete="off" enterkeyhint="search" onkeyup="if(event.key==='Enter') handleSearch()">
                 <button type="button" class="search-btn" onclick="handleSearch()">찾기</button>
             </div>
         </div>
@@ -1117,7 +1117,7 @@
         function resetSearch() {
             const kwEl = document.getElementById('search-keyword');
             const typeEl = document.getElementById('search-type');
-            if (kwEl) { kwEl.value = ''; kwEl.placeholder = '시 제목이나 시인 이름'; }
+            if (kwEl) { kwEl.value = ''; }
             if (typeEl) typeEl.value = 'all';
         }
 
